@@ -1,18 +1,40 @@
-<!--
-  Generated template for the SingupPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
+    <ion-navbar color="back">
+      <ion-title>
+        Registrar-se
+      </ion-title>
+    </ion-navbar>
+  </ion-header>
 
-  <ion-navbar>
-    <ion-title>singup</ion-title>
-  </ion-navbar>
+  <ion-content padding>
+    <ion-item text-center no-lines>
+        <img src="assets/imgs/logo_anote.png" alt="logo">
+    </ion-item>
 
-</ion-header>
+    <ion-item text-center no-lines>
+      <h1>anote!</h1>
+    </ion-item>
 
+    <ion-grid style="width: 75%;">
+      <ion-row class="rowStyle">
+        <ion-icon name="person" color="back"></ion-icon>
+        <ion-input type="text" placeholder="seu nome" [(ngModel)]="nome"></ion-input>
+      </ion-row>
 
-<ion-content padding>
+      <ion-row class="rowStyle">
+        <ion-icon name="mail" color="back"></ion-icon>
+        <ion-input type="email" placeholder="seu e-mail" [(ngModel)]="email"></ion-input>
+      </ion-row>
 
-</ion-content>
+      <ion-row class="rowStyle">
+        <ion-icon name="key" color="back"></ion-icon>
+        <ion-input type="password" placeholder="sua senha" [(ngModel)]="senha"></ion-input>
+      </ion-row>
+
+      <ion-row>
+        <button ion-button block round outline color="light" style="margin-top: 30px;" (click)="singup()">Registrar-se</button>
+      </ion-row>
+    </ion-grid>
+
+    <button ion-button block clear color="light" (click)="goLogin()">Já possui uma conta? Entre aqui!</button>
+  </ion-content>
