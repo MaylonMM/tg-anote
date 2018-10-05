@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import firebase from 'firebase';
 
 @Component({
   templateUrl: 'app.html'
@@ -11,6 +12,8 @@ export class MyApp {
 
   rootPage: string = 'LoginPage';
   pages: Array<{title: string, component: string}>;
+  userCred: any;
+  autoLogin: boolean = true;
 
   constructor(
     public platform: Platform,
@@ -23,6 +26,23 @@ export class MyApp {
     this.pages = [
       { title: 'Inicio', component: 'HomePage' },
     ];
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        console.log("Atualização feita na conta de: " + user.displayName);
+
+        if(this.nav.getActive().name == "LoginPage") {
+          this.autoLogin = true;
+        }
+
+        if(this.autoLogin) {
+          this.nav.setRoot('HomePage');
+          this.autoLogin = false;
+        }
+      } else {
+        console.log("Sem usuário logado no sistema");
+      }
+    });
   }
 
   initializeApp() {

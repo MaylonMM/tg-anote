@@ -11,6 +11,7 @@ export class LoginPage {
 
   email: string = "";
   senha: string = "";
+  userCred: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -22,7 +23,10 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    console.log('Entrou na LoginPage');
+    // Fazer um teste de colocar novamente o observador
+    // do usuario aqui para ver se o observador é desligado
+    // quando se está em outra pagina.
   }
 
   ionViewDidEnter() {
@@ -40,14 +44,13 @@ export class LoginPage {
   login() {
     firebase.auth().signInWithEmailAndPassword(this.email, this.senha)
       .then((user) => {
-        console.log(user)
+        console.log(user);
 
         this.toastCtrl.create({
           message: "Bem vindo, " + user.user.displayName + "!",
           duration: 3000
         }).present();
-
-        this.navCtrl.setRoot('HomePage');
+        // Direcionamento feito pelo observador em app.component.ts
 
       }).catch((err) => {
         console.log(err)
@@ -55,7 +58,8 @@ export class LoginPage {
           message: err.message,
           duration: 3000
         }).present();
-      })
+      });
+
   }
 
 }

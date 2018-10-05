@@ -15,12 +15,12 @@ export class HomePage {
     public navCtrl: NavController,
     private toastCtrl: ToastController
   ) {
-    if(firebase.auth().currentUser == null) {
-      this.userName = "desconhecido";
-      console.log("Entrou no desconhecido");
-    } else {
+
+  }
+
+  ionViewWillEnter(){
+    if(firebase.auth().currentUser != null) {
       this.userName = firebase.auth().currentUser.displayName;
-      console.log("Entrou no conhecido" + firebase.auth().currentUser);
     }
   }
 

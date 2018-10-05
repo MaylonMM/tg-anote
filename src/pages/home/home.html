@@ -15,7 +15,7 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item text-center no-lines>
+  <ion-item text-center no-lines *ngIf="userName">
     <h1>Olá, {{ userName }}!</h1>
   </ion-item>
 
