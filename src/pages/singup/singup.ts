@@ -12,6 +12,7 @@ export class SingupPage {
   nome: string = "";
   email: string = "";
   senha: string = "";
+  senhaRepete: string = "";
 
   constructor(
     public navCtrl: NavController,
@@ -40,7 +41,8 @@ export class SingupPage {
   }
 
   singup() {
-    firebase.auth().createUserWithEmailAndPassword(this.email, this.senha)
+    if(this.senha == this.senhaRepete) {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.senha)
       .then((data) => {
         console.log(data);
 
@@ -76,6 +78,17 @@ export class SingupPage {
           duration: 3000
         }).present();
       })
+    } else {
+      this.senha = "";
+      this.senhaRepete = "";
+
+      this.toastCtrl.create({
+        message: "A senha está incorreta",
+        duration: 3000
+      }).present();
+    }
+
+
   }
 
 }
