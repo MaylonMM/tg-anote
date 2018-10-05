@@ -1,3 +1,15 @@
 page-home {
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, backPrim)
+    }
+  }
 
+  .item {
+    background-color: map-get($colors, backPrim)
+  }
+
+  h1 {
+    font-size: 1em;
+  }
 }

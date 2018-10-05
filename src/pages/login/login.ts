@@ -43,7 +43,7 @@ export class LoginPage {
         console.log(user)
 
         this.toastCtrl.create({
-          message: "Welcome " + user.user.displayName,
+          message: "Bem vindo, " + user.user.displayName + "!",
           duration: 3000
         }).present();
 
