@@ -10,7 +10,7 @@ import firebase from 'firebase';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: string = 'LoginPage';
+  rootPage: string = 'InfoEscolaPage';
   pages: Array<{title: string, component: string}>;
   userCred: any;
   autoLogin: boolean = true;
@@ -25,6 +25,7 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Inicio', component: 'HomePage' },
+      { title: 'Escolas', component: 'EscolasPage' },
     ];
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -33,6 +34,10 @@ export class MyApp {
 
         if(this.nav.getActive().name == "LoginPage") {
           this.autoLogin = true;
+        }
+
+        else {
+          this.autoLogin = false;
         }
 
         if(this.autoLogin) {

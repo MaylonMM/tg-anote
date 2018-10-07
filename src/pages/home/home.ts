@@ -9,7 +9,7 @@ import firebase from "firebase";
 })
 export class HomePage {
 
-  userName: string = "";
+  userName: string;
 
   constructor(
     public navCtrl: NavController,

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-navbar color="back">
+    <ion-title>Escola</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid style="width: 95%;">
+    <ion-item>
+      <p>Informações Gerais</p>
+    </ion-item>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="school" color="back"></ion-icon>
+      <ion-input type="text" placeholder="nome da escola" [(ngModel)]="nome"></ion-input>
+    </ion-row>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="remove" color="back"></ion-icon>
+      <ion-input type="text" placeholder="sigla usada na escola" [(ngModel)]="sigla"></ion-input>
+    </ion-row>
+
+    <ion-item>
+      <p>Informações para Contato</p>
+    </ion-item>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="call" color="back"></ion-icon>
+      <ion-input type="text" placeholder="telefone" [(ngModel)]="telefone"></ion-input>
+    </ion-row>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="mail" color="back"></ion-icon>
+      <ion-input type="email" placeholder="e-mail" [(ngModel)]="email"></ion-input>
+    </ion-row>
+
+    <ion-item>
+      <p>Endereço</p>
+    </ion-item>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="home" color="back"></ion-icon>
+      <ion-input type="text" placeholder="endereço da escola" [(ngModel)]="endereco"></ion-input>
+    </ion-row>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="list" color="back"></ion-icon>
+      <ion-input type="text" placeholder="cidade" [(ngModel)]="cidade"></ion-input>
+    </ion-row>
+
+    <ion-row class="rowStyle">
+      <ion-icon name="list" color="back"></ion-icon>
+      <ion-input type="text" placeholder="estado" [(ngModel)]="estado"></ion-input>
+    </ion-row>
+
+    <ion-row>
+      <button ion-button block round color="back" style="margin-top: 30px;" (click)="salvar()">Salvar</button>
+    </ion-row>
+  </ion-grid>
+</ion-content>

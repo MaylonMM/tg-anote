@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar color="back">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title>Minhas Escolas</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h4 *ngIf="!escolas">
+    Você ainda não tem escolas cadastradas
+  </h4>
+
+  <ion-list>
+    <button ion-item *ngFor="let escola of escolas" (click)="goInfo(escola)">
+      {{ escola.data().nome }}
+    </button>
+  </ion-list>
+
+  <ion-fab right bottom>
+    <button ion-fab color="laranja" (click)="goCadEscola()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>
