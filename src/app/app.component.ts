@@ -10,7 +10,7 @@ import firebase from 'firebase';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: string = 'InfoEscolaPage';
+  rootPage: string = 'LoginPage';
   pages: Array<{title: string, component: string}>;
   userCred: any;
   autoLogin: boolean = true;
@@ -26,6 +26,7 @@ export class MyApp {
     this.pages = [
       { title: 'Inicio', component: 'HomePage' },
       { title: 'Escolas', component: 'EscolasPage' },
+      { title: 'Cursos', component: 'CursosPage' }
     ];
 
     firebase.auth().onAuthStateChanged((user) => {

@@ -4,12 +4,12 @@ import firebase from 'firebase';
 
 @IonicPage()
 @Component({
-  selector: 'page-escolas',
-  templateUrl: 'escolas.html',
+  selector: 'page-cursos',
+  templateUrl: 'cursos.html',
 })
-export class EscolasPage {
+export class CursosPage {
 
-  escolas: any[] = undefined;
+  cursos: any[] = undefined;
 
   constructor(
     public navCtrl: NavController,
@@ -18,25 +18,24 @@ export class EscolasPage {
 
   }
 
-  goCadEscola() {
-    this.navCtrl.push('CadEscolaPage');
-  }
-
   ionViewDidEnter(){
-    firebase.firestore().collection("escolas")
+    firebase.firestore().collection("cursos")
     .where("user", "==", firebase.auth().currentUser.uid)
     .orderBy("nome", "asc").get()
     .then((data) => {
-      this.escolas = data.docs;
+      this.cursos = data.docs;
     }).catch((erro) => {
       console.log(erro);
-      this.escolas = undefined;
     });
   }
 
-  goInfo(escola) {
-    this.navCtrl.push('InfoEscolaPage', {
-      escola: escola
+  goCadCurso() {
+    this.navCtrl.push('CadCursoPage');
+  }
+
+  goInfo(curso) {
+    this.navCtrl.push('InfoCursoPage', {
+      curso: curso
     });
   }
 

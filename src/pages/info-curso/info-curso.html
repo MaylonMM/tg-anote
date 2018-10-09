@@ -1,0 +1,60 @@
+<ion-header>
+    <ion-navbar color="back">
+      <ion-title>Informações</ion-title>
+    </ion-navbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-card>
+      <ion-card-header>
+        Informações Gerais
+      </ion-card-header>
+
+      <ion-list>
+        <ion-item>
+          <p>Escola</p>
+          <h2>{{ nomeEscola }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Curso</p>
+          <h2>{{ curso.data().nome }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Sigla do Curso</p>
+          <h2>{{ curso.data().sigla }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Data de Início</p>
+          <h2>{{ curso.data().dataInicio }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Data de Finalização</p>
+          <h2>{{ curso.data().dataFinalizacao }}</h2>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        Períodos Letivos
+      </ion-card-header>
+
+      <ion-list>
+        <ion-item *ngFor="let periodo of periodos">
+          <p>Periodo</p>
+          <h2>{{ periodo.data().nome }}</h2>
+          <p>Sigla</p>
+          <h2>{{ periodo.data().sigla }}</h2>
+          <p>Tipo</p>
+          <h2>{{ periodo.data().tipo }}</h2>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+
+    <button ion-button block round color="back" style="margin-top: 30px;" (click)="alterar()">Alterar</button>
+    <button ion-button block round color="danger" style="margin-top: 10px;" (click)="deletar()">Deletar</button>
+  </ion-content>

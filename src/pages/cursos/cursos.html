@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar color="back">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title>Meus Cursos</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h4 *ngIf="!cursos">
+    Você ainda não tem cursos cadastrados
+  </h4>
+
+  <ion-list>
+    <button ion-item *ngFor="let curso of cursos" (click)="goInfo(curso)">
+      {{ curso.data().nome }}
+    </button>
+  </ion-list>
+
+  <ion-fab right bottom>
+    <button ion-fab color="laranja" (click)="goCadCurso()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

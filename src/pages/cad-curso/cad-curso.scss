@@ -1,0 +1,26 @@
+page-cad-curso {
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, backSec)
+    }
+  }
+
+  .item {
+    background-color: map-get($colors, backSec)
+  }
+
+  ion-label {
+    padding-top: 15px;
+  }
+
+  .rowStyle {
+    background-color: white;
+    padding-left: 15px;
+    border-radius: 30px;
+    margin-top: 10px;
+  }
+  .rowStyle2 {
+    background-color: map-get($colors, backSec);
+  }
+
+}

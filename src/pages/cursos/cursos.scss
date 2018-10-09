@@ -1,0 +1,20 @@
+page-cursos {
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, backPrim)
+    }
+  }
+
+  .item {
+    background-color: map-get($colors, backPrim)
+  }
+
+  h4 {
+    text-align: center;
+    padding-top: 20px;
+  }
+
+  ion-fab {
+    padding: 20px;
+  }
+}
