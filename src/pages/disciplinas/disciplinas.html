@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar color="back">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title>Minhas Disciplinas</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h4 *ngIf="!disciplinas">
+    Você ainda não tem disciplinas cadastradas
+  </h4>
+
+  <button ion-button *ngIf="!uid" block round color="back" class="btn" (click)="update()">Atualizar</button>
+
+  <ion-list>
+    <button ion-item *ngFor="let disciplina of disciplinas" (click)="goInfo(disciplina)">
+      {{ disciplina.data().nome }}
+    </button>
+  </ion-list>
+
+  <ion-fab right bottom>
+    <button ion-fab color="laranja" (click)="goCadDisciplina()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>
