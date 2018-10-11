@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar color="back">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title>Minha Agenda</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <calendar [eventSource]="eventSource"
+    [calendarMode]="calendar.mode"
+    [currentDate]="calendar.currentDate"
+    (onEventSelected)="onEventSelected($event)"
+    (onTitleChanged)="onViewTitleChanged($event)"
+    (onTimeSelected)="onTimeSelected($event)"
+    step="30"
+    class="calendar">
+  </calendar>
+
+  <button ion-button *ngIf="!uid" block round color="laranja" class="btn" (click)="updatePage()">Atualizar</button>
+
+  <ion-fab right bottom>
+    <button ion-fab color="laranja" (click)="goCadAnotacao()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

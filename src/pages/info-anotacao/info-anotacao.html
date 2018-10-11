@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-navbar color="back">
+    <ion-title>Informações</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+        Informações
+      </ion-card-header>
+
+      <ion-list>
+        <ion-item>
+          <p>Título</p>
+          <h2>{{ anotacao.data().titulo }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Tipo de Anotação</p>
+          <h2>{{ anotacao.data().tipo }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Disciplina Vinculada</p>
+          <h2>{{ disciplina.nome }}</h2>
+        </ion-item>
+      </ion-list>
+  </ion-card>
+
+  <ion-card>
+      <ion-card-header>
+        Data
+      </ion-card-header>
+
+      <ion-list>
+        <ion-item>
+          <p>Data e Hora Inicial</p>
+          <h2>{{ dataInicial }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Data e Hora Final</p>
+          <h2>{{ dataFinal }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Dia Todo?</p>
+          <h2>{{ diaTodo }}</h2>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+        Informações Adicionais
+      </ion-card-header>
+
+      <ion-list>
+        <ion-item>
+          <p>Observações</p>
+          <h2>{{ anotacao.data().obs }}</h2>
+        </ion-item>
+      </ion-list>
+  </ion-card>
+
+  <button ion-button block round color="back" style="margin-top: 30px;" (click)="alterar()">Alterar</button>
+
+  <button ion-button block round color="danger" style="margin-top: 10px;" (click)="deletar()">Deletar</button>
+</ion-content>

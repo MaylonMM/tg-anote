@@ -1,0 +1,28 @@
+page-agenda {
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, backPrim);
+    }
+  }
+
+  .item {
+    background-color: map-get($colors, backPrim);
+  }
+
+  .btn {
+    margin-top: 30px;
+  }
+
+  h4 {
+    text-align: center;
+    padding-top: 20px;
+  }
+
+  ion-fab {
+    padding: 20px;
+  }
+
+  ion-fab-list {
+    padding: 20px;
+  }
+}
