@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
+import moment from 'moment';
 
 @IonicPage()
 @Component({
@@ -53,8 +54,8 @@ export class AgendaPage {
         data.docs.forEach((doc) => {
           events.push({
             title: doc.data().titulo,
-            startTime: new Date(doc.data().startTime),
-            endTime: new Date(doc.data().endTime),
+            startTime: moment(new Date(doc.data().startTime)).add(moment(new Date(doc.data().startTime)).utcOffset() * -1, 'm').toDate(),
+            endTime: moment(new Date(doc.data().endTime)).add(moment(new Date(doc.data().endTime)).utcOffset() * -1, 'm').toDate(),
             allDay: doc.data().diaTodo,
             id: doc.id
           });

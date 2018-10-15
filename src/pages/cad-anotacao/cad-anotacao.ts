@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import firebase from 'firebase';
+import moment from 'moment';
 
 @IonicPage()
 @Component({
@@ -32,8 +33,8 @@ export class CadAnotacaoPage {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController
   ) {
-    this.startTime = new Date().toISOString();
-    this.endTime = new Date().toISOString();
+    this.startTime = moment(this.startTime).add(moment(this.startTime).utcOffset(), 'm').toISOString();
+    this.endTime = moment(this.endTime).add(moment(this.endTime).utcOffset() + 60, 'm').toISOString();
     this.selectOptDisciplina = {
       title: "Disciplinas",
       subTitle: "Selecione uma disciplina"

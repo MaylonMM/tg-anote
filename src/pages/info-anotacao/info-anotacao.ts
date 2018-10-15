@@ -60,9 +60,8 @@ export class InfoAnotacaoPage {
       this.diaTodo = "Sim";
     }
 
-    this.dataInicial = moment(this.anotacao.data().startTime).format("L LT");
-    this.dataFinal = moment(this.anotacao.data().endTime).format("L LT");
-
+    this.dataInicial = moment(new Date(this.anotacao.data().startTime)).add(moment(new Date(this.anotacao.data().startTime)).utcOffset() * -1, 'm').format("L LT");
+    this.dataFinal = moment(new Date(this.anotacao.data().endTime)).add(moment(new Date(this.anotacao.data().endTime)).utcOffset() * -1, 'm').format("L LT");
   }
 
   alterar() {
