@@ -1,4 +1,4 @@
-page-cad-disciplina {
+page-cad-formula {
   ion-content {
     .scroll-content {
       background-color: map-get($colors, backSec)
@@ -26,5 +26,14 @@ page-cad-disciplina {
     padding-left: 15px;
     border-radius: 30px;
     margin-top: 10px;
+  }
+
+  .btns {
+    padding: 5px;
+  }
+
+  .row {
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 }

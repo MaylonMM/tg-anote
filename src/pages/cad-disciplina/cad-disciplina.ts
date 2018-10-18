@@ -1,5 +1,6 @@
+import { Formula } from './../../models/formula.model';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController, ModalController } from 'ionic-angular';
 import firebase from 'firebase';
 
 @IonicPage()
@@ -16,6 +17,7 @@ export class CadDisciplinaPage {
   notaMin: number = undefined;
   notaMed: number = undefined;
   notaMax: number = undefined;
+  formula: Formula;
 
   uid: any = undefined;
   cursos: any[] = [];
@@ -32,7 +34,8 @@ export class CadDisciplinaPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    public modalCtrl: ModalController
   ) {
     this.selectOptCurso = {
       title: "Cursos",
@@ -42,6 +45,11 @@ export class CadDisciplinaPage {
       title: "Sem Períodos",
       subTitle: "Selecione um curso para listar seus períodos"
     };
+    this.formula = {
+      tipo: "media",
+      expressao: "",
+      variaveis: []
+    }
   }
 
   ionViewDidEnter() {
@@ -77,6 +85,8 @@ export class CadDisciplinaPage {
       this.uid = undefined;
     }
 
+
+
     this.disciplina = this.navParams.get("disciplina");
 
     if(this.disciplina != undefined) {
@@ -107,6 +117,7 @@ export class CadDisciplinaPage {
       this.notaMin = this.disciplina.data().notaMin;
       this.notaMax = this.disciplina.data().notaMax;
       this.notaMed = this.disciplina.data().notaMed;
+      this.formula = this.disciplina.data().formula;
       this.periodoId = this.navParams.get("periodoId");
     }
 
@@ -160,6 +171,10 @@ export class CadDisciplinaPage {
     });
     load.present();
 
+    if(this.formula.expressao == "") {
+      this.formula.expressao = "0";
+    }
+
     if(!this.editando) {
       firebase.firestore().collection("disciplinas").add({
         nome: this.nome,
@@ -167,6 +182,7 @@ export class CadDisciplinaPage {
         notaMin: this.notaMin,
         notaMed: this.notaMed,
         notaMax: this.notaMax,
+        formula: this.formula,
         periodo: this.periodo,
         user: this.uid
       }).then((doc) => {
@@ -196,6 +212,7 @@ export class CadDisciplinaPage {
         notaMin: this.notaMin,
         notaMed: this.notaMed,
         notaMax: this.notaMax,
+        formula: this.formula,
         periodo: this.periodo
       }).then(() => {
         console.log("Disciplina Atualizada");
@@ -215,6 +232,19 @@ export class CadDisciplinaPage {
         }).present();
       });
     }
+  }
+
+  addFormula() {
+    let pageAddFormula = this.modalCtrl.create('CadFormulaPage', {
+      formula: this.formula,
+      disciplina: this.nome
+    });
+    pageAddFormula.onDidDismiss(data => {
+      if(data != undefined) {
+        this.formula = data.formula;
+      }
+    });
+    pageAddFormula.present();
   }
 
 }

@@ -53,6 +53,11 @@
       <ion-input type="number" placeholder="nota média para aprovação" [(ngModel)]="notaMed"></ion-input>
     </ion-item>
 
+    <ion-item class="rowStyle" no-lines>
+      <ion-icon item-start name="calculator" color="back"></ion-icon>
+      <ion-input type="text" placeholder="adicionar fórmula" [(ngModel)]="formula.expressao" disabled="true" (click)="addFormula()"></ion-input>
+    </ion-item>
+
     <button ion-button *ngIf="!uid" block round color="laranja" class="btn" (click)="updatePage()">Atualizar</button>
 
     <button ion-button block round color="back" class="btn" (click)="salvar()">Salvar</button>
