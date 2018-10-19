@@ -72,14 +72,32 @@ export class CadFormulaPage {
           {
             text: "Adicionar",
             handler: (data) => {
-              this.formula.variaveis.push({
-                nome: data.var,
-                valor: 0
+              let flag = false;
+              this.formula.variaveis.forEach((v) => {
+                if(v.nome == data.var) {
+                  flag = true;
+                }
               });
-              if(this.formula.tipo == "media") {
-                this.formula.expressao = this.getExpressao();
+              if(!flag) {
+                this.formula.variaveis.push({
+                  nome: data.var,
+                  valor: 0
+                });
+                if(this.formula.tipo == "media") {
+                  this.formula.expressao = this.getExpressao();
+                } else {
+                  this.formula.expressao = this.formula.expressao + data.var;
+                }
               } else {
-                this.formula.expressao = this.formula.expressao + data.var;
+                this.alertCtrl.create({
+                  title: "Atenção",
+                  message: "Já existe uma variável com este nome nesta fórmula",
+                  buttons: [
+                    {
+                      text: "Ok"
+                    }
+                  ]
+                }).present();
               }
             }
           }

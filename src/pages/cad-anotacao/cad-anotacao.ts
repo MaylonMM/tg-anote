@@ -1,3 +1,5 @@
+import { Variavel } from './../../models/variavel.model';
+import { Formula } from './../../models/formula.model';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import firebase from 'firebase';
@@ -13,16 +15,27 @@ export class CadAnotacaoPage {
   uid: any = undefined;
   titulo: string = "";
   tipo: string = "";
-  disciplina: any = undefined;
+  disciplina: any = "";
   startTime: any = undefined;
   endTime: any = undefined;
   diaTodo: boolean = false;
   obs: string = "";
 
+  formula: Formula = {
+    tipo: "",
+    expressao: "",
+    variaveis: []
+  }
+  variavel: Variavel = {
+    nome: "",
+    valor: 0
+  }
+
   disciplinas: any[] = [];
   selectOptDisciplina: any = {};
   tipos: string[] = [];
   selectOptTipo: any = {};
+  selectOptNota: any = {};
 
   editando: boolean = false;
   anotacao: any = undefined;
@@ -42,6 +55,10 @@ export class CadAnotacaoPage {
     this.selectOptTipo = {
       title: "Tipos",
       subTitle: "Selecione um tipo de anotação"
+    };
+    this.selectOptNota = {
+      title: "Notas",
+      subTitle: "Selecione um uma nota para vincular a anotação"
     };
     this.tipos = [
       "Avaliação",
@@ -97,9 +114,27 @@ export class CadAnotacaoPage {
     this.endTime = this.anotacao.data().endTime;
     this.diaTodo = this.anotacao.data().diaTodo;
     this.obs = this.anotacao.data().obs;
+    this.variavel = this.anotacao.data().variavel;
+    this.carregarVariaveis();
   }
 
   salvar() {
+    if(this.tipo == "Avaliação" || this.tipo == "Trabalho" || this.tipo == "Lição de Casa") {
+      this.formula.variaveis.forEach((v) => {
+        if(v.nome == this.variavel.nome) {
+          v.valor = this.variavel.valor;
+        }
+      });
+
+      firebase.firestore().collection("disciplinas").doc(this.disciplina).update({
+        formula: this.formula
+      }).then((doc) => {
+        console.log("Nota atualizada");
+      }).catch((erro) => {
+        console.log("Não deu pra atualizar a nota", erro);
+      });
+    }
+
     if(!this.editando) {
       let loading = this.loadingCtrl.create({
         content: "Salvando..."
@@ -114,7 +149,8 @@ export class CadAnotacaoPage {
         endTime: this.endTime,
         diaTodo: this.diaTodo,
         obs: this.obs,
-        user: this.uid
+        user: this.uid,
+        variavel: this.variavel
       }).then(() => {
         console.log("Anotação cadastrada!");
         loading.dismiss();
@@ -150,7 +186,8 @@ export class CadAnotacaoPage {
       startTime: this.startTime,
       endTime: this.endTime,
       diaTodo: this.diaTodo,
-      obs: this.obs
+      obs: this.obs,
+      variavel: this.variavel
     }).then(() => {
       console.log("Anotação Atualizada");
       loading.dismiss();
@@ -167,6 +204,38 @@ export class CadAnotacaoPage {
         message: "Infelizmente ocorreu um erro ao atualizar a disciplina, por favor tente novamente.",
         duration: 3000
       }).present();
+    });
+  }
+
+  onSelectChangeDisc(select: any) {
+    this.carregarVariaveis();
+  }
+
+  carregarVariaveis() {
+    if(this.tipo == "Avaliação" || this.tipo == "Trabalho" || this.tipo == "Lição de Casa") {
+      let loading = this.loadingCtrl.create({
+        content: "Carregando Notas..."
+      });
+      loading.present();
+
+      firebase.firestore().collection("disciplinas").doc(this.disciplina).get()
+      .then((doc) => {
+        this.formula = doc.data().formula;
+        loading.dismiss();
+      }).catch((erro) => {
+        console.log(erro);
+        loading.dismiss();
+      });
+    }
+  }
+
+  onSelectChangeNota(select: any) {
+    this.formula.variaveis.forEach((v) => {
+      if(v.nome == select) {
+        console.log(v.valor);
+        this.variavel.valor = v.valor;
+        this.variavel.nome = v.nome;
+      }
     });
   }
 

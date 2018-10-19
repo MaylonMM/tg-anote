@@ -51,6 +51,24 @@
       </ion-list>
     </ion-card>
 
+  <ion-card *ngIf="anotacao.data().tipo == 'Avaliação' || anotacao.data().tipo == 'Trabalho' || anotacao.data().tipo == 'Lição de Casa'">
+    <ion-card-header>
+        Sistema de Notas
+      </ion-card-header>
+
+      <ion-list>
+        <ion-item>
+          <p>Avaliação</p>
+          <h2>{{ anotacao.data().variavel.nome }}</h2>
+        </ion-item>
+
+        <ion-item>
+          <p>Nota</p>
+          <h2>{{ anotacao.data().variavel.valor }}</h2>
+        </ion-item>
+      </ion-list>
+  </ion-card>
+
   <ion-card>
     <ion-card-header>
         Informações Adicionais

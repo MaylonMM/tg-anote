@@ -42,19 +42,23 @@ export class InfoAnotacaoPage {
     });
     loading.present();
 
-    firebase.firestore().collection("disciplinas").doc(this.anotacao.data().disciplina).get()
-    .then((doc) => {
-      console.log("Disciplina encontrada");
-      this.disciplina = {
-        nome: doc.data().nome,
-        id: doc.id
-      };
+    if(this.anotacao.data().disciplina != "") {
+      firebase.firestore().collection("disciplinas").doc(this.anotacao.data().disciplina).get()
+      .then((doc) => {
+        console.log("Disciplina encontrada");
+        this.disciplina = {
+          nome: doc.data().nome,
+          id: doc.id
+        };
+        loading.dismiss();
+      }).catch((erro) => {
+        console.log("Erro ao encontrar a disciplina");
+        console.log(erro);
+        loading.dismiss();
+      });
+    } else {
       loading.dismiss();
-    }).catch((erro) => {
-      console.log("Erro ao encontrar a disciplina");
-      console.log(erro);
-      loading.dismiss();
-    });
+    }
 
     if(this.anotacao.data().diaTodo) {
       this.diaTodo = "Sim";
