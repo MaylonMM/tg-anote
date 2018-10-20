@@ -1,18 +1,45 @@
-<!--
-  Generated template for the CadNotaPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>cadNota</ion-title>
+  <ion-navbar color="back">
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+    <ion-title>Notas</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
+  <ion-list>
+    <ion-item class="item-prim"><ion-label>Informações Gerais</ion-label></ion-item>
 
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="book" color="back"></ion-icon>
+      <ion-label stacked>Disciplina</ion-label>
+      <ion-select [selectOptions]="selectOptDisciplina" (ionChange)="onSelectDisciplina($event)" cancelText="Cancelar">
+        <ion-option *ngFor="let disc of disciplinas">{{ disc.nome }}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="calculator" color="back"></ion-icon>
+      <ion-label stacked>Fórmula</ion-label>
+      <ion-input type="text" [(ngModel)]="disciplina.formula.expressao" disabled="true"></ion-input>
+    </ion-item>
+
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="trophy" color="back"></ion-icon>
+      <ion-label stacked>Nota</ion-label>
+      <ion-input type="text" [(ngModel)]="nota" disabled="true"></ion-input>
+      <button ion-button item-end round color="back" (click)="calcular()">Calcular Nota</button>
+    </ion-item>
+
+    <ion-item class="label-sec" *ngIf="disciplina.formula.variaveis.length != 0"><ion-label>Avaliações e Notas</ion-label></ion-item>
+
+    <ion-item class="item-sec" no-lines *ngFor="let variavel of disciplina.formula.variaveis">
+      <ion-icon item-start name="ribbon" color="back"></ion-icon>
+      <ion-label stacked>{{ variavel.nome }}</ion-label>
+      <ion-input type="number" [(ngModel)]="variavel.valor"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <button ion-button block round color="back" (click)="salvar()">Salvar Notas</button>
+  <button ion-button block clear round color="back" (click)="voltar()">Voltar</button>
+  <button ion-button *ngIf="uid == ''" block round color="laranja" (click)="updatePage()">Atualizar</button>
 </ion-content>

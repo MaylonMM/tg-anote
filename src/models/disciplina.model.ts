@@ -10,6 +10,8 @@ export class Disciplina {
   formula: Formula;
   user: string;
 
+  id?: string;
+
   constructor() {
     this.nome = "";
     this.sigla = "";

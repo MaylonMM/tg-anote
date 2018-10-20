@@ -71,6 +71,7 @@ export class SimuladorPage {
         });
         loadind.dismiss();
       }).catch((erro) => {
+        loadind.dismiss();
         console.log(erro);
         this.toastCtrl.create({
           message: "Ocorreu um erro inesperado. :(",
@@ -93,6 +94,11 @@ export class SimuladorPage {
 
     this.disciplina.formula.variaveis.forEach((v) => {
       let inc = "";
+
+      if(v.valor.toString() == "") {
+        v.valor = 0;
+      }
+
       inc = inc + v.nome + " = " + v.valor;
       parser.eval(inc);
     });
