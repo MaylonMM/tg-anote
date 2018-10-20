@@ -1,7 +1,13 @@
 import { Variavel } from "./variavel.model";
 
-export interface Formula {
+export class Formula {
   tipo: string;
   expressao: string;
   variaveis: Variavel[];
+
+  constructor() {
+    this.tipo = "media";
+    this.expressao = "";
+    this.variaveis = [];
+  }
 }

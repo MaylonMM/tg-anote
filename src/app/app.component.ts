@@ -28,7 +28,9 @@ export class MyApp {
       { title: 'Escolas', component: 'EscolasPage' },
       { title: 'Cursos', component: 'CursosPage' },
       { title: 'Disciplinas', component: 'DisciplinasPage' },
-      { title: 'Agenda', component: 'AgendaPage' }
+      { title: 'Agenda', component: 'AgendaPage' },
+      { title: 'Nota', component: 'CadNotaPage' },
+      { title: 'Simulador', component: 'SimuladorPage' }
     ];
 
     firebase.auth().onAuthStateChanged((user) => {
