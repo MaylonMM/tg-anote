@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
+
 import firebase from 'firebase';
+
+import { Escola } from '../../models/escola.model';
 
 @IonicPage()
 @Component({
@@ -9,15 +12,28 @@ import firebase from 'firebase';
 })
 export class InfoEscolaPage {
 
-  escola: any = {};
+  escola: Escola;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
+    public loadingCtrl: LoadingController,
     private alertCtrl: AlertController
   ) {
-    this.escola = this.navParams.get("escola");
+    this.escola = new Escola();
+  }
+
+  ionViewDidEnter() {
+    this.updatePage();
+  }
+
+  updatePage() {
+    let dadosEscola = this.navParams.get("escola");
+
+    if(dadosEscola != undefined) {
+      this.escola = dadosEscola;
+    }
   }
 
   alterar() {
@@ -27,7 +43,6 @@ export class InfoEscolaPage {
   }
 
   deletar() {
-    console.log("Entrou no deletar");
     this.alertCtrl.create({
       title: "Cuidado",
       message: "Você REALMENTE deseja excluir esses dados?",
@@ -38,17 +53,24 @@ export class InfoEscolaPage {
         {
           text: "Sim",
           handler: () => {
+            let loading = this.loadingCtrl.create({
+              content: "Deletando..."
+            });
+            loading.present();
+
             firebase.firestore().collection("escolas").doc(this.escola.id).delete()
             .then(() => {
               this.navCtrl.setRoot('EscolasPage');
-
+              loading.dismiss();
               this.toastCtrl.create({
-                message: "Escola excluida com sucesso.",
+                message: "Escola excluída.",
                 duration: 3000
               }).present();
-            }).catch(() => {
+            }).catch((erro) => {
+              console.log(erro);
+              loading.dismiss();
               this.toastCtrl.create({
-                message: "Não foi possivel excluir a escola.",
+                message: "Ocorreu um erro inesperado. :(",
                 duration: 3000
               }).present();
             });
@@ -56,7 +78,14 @@ export class InfoEscolaPage {
         }
       ]
     }).present();
+  }
 
+  voltar() {
+    if(this.navCtrl.canGoBack()) {
+      this.navCtrl.pop();
+    } else {
+      this.navCtrl.setRoot('HomePage');
+    }
   }
 
 }

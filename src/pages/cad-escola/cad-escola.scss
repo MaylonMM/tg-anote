@@ -1,27 +1,26 @@
 page-cad-escola {
+  //fundo da tela
   ion-content {
     .scroll-content {
-      background-color: map-get($colors, backSec)
+      background-color: map-get($colors, backSec);
     }
   }
 
-  .item {
-    background-color: map-get($colors, backSec)
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
   }
 
-  p {
-    padding-top: 15px;
+  //ion-item secundário
+  .label-sec {
+    background-color: map-get($colors, backSec);
+    padding-top: 10px;
   }
 
-  .rowStyle {
+  //ion-item secundário
+  .item-sec {
     background-color: white;
-    padding-left: 10px;
     border-radius: 30px;
     margin-top: 10px;
-
-    ion-icon {
-      margin-top: 13px;
-      margin-right: 10px;
-    }
   }
 }

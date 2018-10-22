@@ -1,64 +1,42 @@
 <ion-header>
   <ion-navbar color="back">
-    <ion-title>Informações</ion-title>
+    <ion-title>Informações da Escola</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-card-header>
-      Informações Gerais
+      <h2>{{ escola.nome }}</h2>
+      <h3>{{ escola.sigla }}</h3>
     </ion-card-header>
 
-    <ion-list>
-      <ion-item>
-        <p>Escola</p>
-        <h2>{{ escola.data().nome }}</h2>
-      </ion-item>
+    <ion-card-content>
+      <label>Contato</label>
+      <h2><ion-icon color="back" name="call"></ion-icon>{{ escola.telefone }}</h2>
+      <h2><ion-icon color="back" name="mail"></ion-icon>{{ escola.email }}</h2>
 
-      <ion-item>
-        <p>Sigla</p>
-        <h2>{{ escola.data().sigla }}</h2>
-      </ion-item>
-    </ion-list>
+      <br>
+      <label>Endereço</label>
+      <h2>{{ escola.endereco }}</h2>
+      <h3>{{ escola.cidade }} - {{ escola.estado }}</h3>
+    </ion-card-content>
   </ion-card>
 
-  <ion-card>
-    <ion-card-header>
-      Contatos
-    </ion-card-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <button ion-button block round color="danger" (click)="deletar()">Deletar</button>
+      </ion-col>
+      <ion-col>
+        <button ion-button block round color="back" (click)="alterar()">Alterar</button>
+      </ion-col>
+    </ion-row>
 
-    <ion-list>
-      <ion-item>
-        <p>Telefone</p>
-        <h2>{{ escola.data().telefone }}</h2>
-      </ion-item>
-
-      <ion-item>
-        <p>E-mail</p>
-        <h2>{{ escola.data().email }}</h2>
-      </ion-item>
-    </ion-list>
-  </ion-card>
-
-  <ion-card>
-    <ion-card-header>
-      Endereço
-    </ion-card-header>
-
-    <ion-list>
-      <ion-item>
-        <p>Endereço</p>
-        <h2>{{ escola.data().endereco }}</h2>
-      </ion-item>
-
-      <ion-item>
-        <p>Cidade</p>
-        <h2>{{ escola.data().cidade }} - {{ escola.data().estado }}</h2>
-      </ion-item>
-    </ion-list>
-  </ion-card>
-
-  <button ion-button block round color="back" style="margin-top: 30px;" (click)="alterar()">Alterar</button>
-  <button ion-button block round color="danger" style="margin-top: 10px;" (click)="deletar()">Deletar</button>
+    <ion-row>
+      <ion-col>
+        <button ion-button block outline round color="back" (click)="voltar()">Voltar</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

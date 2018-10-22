@@ -1,19 +1,24 @@
 page-escolas {
+  //fundo da tela
   ion-content {
     .scroll-content {
-      background-color: map-get($colors, backPrim)
+      background-color: map-get($colors, backSec);
     }
   }
 
-  .item {
-    background-color: map-get($colors, backPrim)
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
   }
 
-  h4 {
-    text-align: center;
-    padding-top: 20px;
+  //ion-item secundário
+  .item-sec {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
   }
 
+  // botão suspenso
   ion-fab {
     padding: 20px;
   }

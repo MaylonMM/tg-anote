@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+
 import firebase from 'firebase';
+
+import { Escola } from '../../models/escola.model';
+import { SelectOpt } from '../../models/selectOpt.model';
 
 @IonicPage()
 @Component({
@@ -9,92 +13,115 @@ import firebase from 'firebase';
 })
 export class CadEscolaPage {
 
-  nome: string = "";
-  sigla: string = "";
-  telefone: string = "";
-  email: string = "";
-  endereco: string = "";
-  cidade: string = "";
-  estado: string = "";
-  user: any;
-
-  escola: any = {};
-  editando: boolean = false;
+  uid: string;
+  escola: Escola;
+  edit: boolean;
+  estados: string[];
+  selectOptEstado: SelectOpt;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public loadingCtrl: LoadingController,
     private toastCtrl: ToastController
   ) {
-    this.escola = this.navParams.get("escola");
-    if(this.escola != undefined) {
-      this.editando = true;
+    this.uid = "";
+    this.escola = new Escola();
+    this.edit = false;
+    this.estados = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+    this.selectOptEstado = { title: "Estados", subTitle: "Selecione um estado" }
+  }
 
-      this.nome = this.escola.data().nome;
-      this.sigla = this.escola.data().sigla;
-      this.telefone = this.escola.data().telefone;
-      this.email = this.escola.data().email;
-      this.endereco = this.escola.data().endereco;
-      this.cidade = this.escola.data().cidade;
-      this.estado = this.escola.data().estado;
+  ionViewDidEnter() {
+    this.updatePage();
+  }
+
+  updatePage() {
+    let user = firebase.auth().currentUser;
+    let dadosEscola = this.navParams.get("escola");
+
+    if(user != null) {
+      this.uid = user.uid;
+    }
+
+    if(dadosEscola != undefined) {
+      this.edit = true;
+      this.escola = dadosEscola;
     }
   }
 
   salvar() {
-    if(!this.editando) {
-      firebase.firestore().collection("escolas").add({
-        nome: this.nome,
-        sigla: this.sigla,
-        telefone: this.telefone,
-        email: this.email,
-        endereco: this.endereco,
-        cidade: this.cidade,
-        estado: this.estado,
-        user: firebase.auth().currentUser.uid
-      }).then((doc) => {
-        console.log(doc);
-
-        this.navCtrl.setRoot('EscolasPage');
-
-        this.toastCtrl.create({
-          message: "Escola cadastrada com sucesso!",
-          duration: 3000
-        }).present();
-      }).catch((erro) => {
-        console.log(erro);
-
-        this.toastCtrl.create({
-          message: "Ocorreu um erro ao cadastrar a escola",
-          duration: 3000
-        }).present();
-      });
+    if(this.edit) {
+      this.atualizar();
     } else {
-      firebase.firestore().collection("escolas").doc(this.escola.id).update({
-        nome: this.nome,
-        sigla: this.sigla,
-        telefone: this.telefone,
-        email: this.email,
-        endereco: this.endereco,
-        cidade: this.cidade,
-        estado: this.estado,
-      }).then((doc) => {
-        console.log(doc);
+      let loading = this.loadingCtrl.create({
+        content: "Salvando..."
+      });
+      loading.present();
 
-        this.navCtrl.setRoot('EscolasPage');
-
+      firebase.firestore().collection("escolas").add({
+        nome: this.escola.nome,
+        sigla: this.escola.sigla,
+        telefone: this.escola.telefone,
+        email: this.escola.email,
+        endereco: this.escola.endereco,
+        cidade: this.escola.cidade,
+        estado: this.escola.estado,
+        user: this.uid
+      }).then(() => {
+        this.voltar();
+        loading.dismiss();
         this.toastCtrl.create({
-          message: "Dados atualizados com sucesso!",
+          message: "Escola cadastrada! :)",
           duration: 3000
         }).present();
       }).catch((erro) => {
         console.log(erro);
-
+        loading.dismiss();
         this.toastCtrl.create({
-          message: "Ocorreu um erro ao atualizar os dados",
+          message: "Ocorreu um erro inesperado. :(",
           duration: 3000
         }).present();
       });
     }
   }
 
+  atualizar() {
+    let loading = this.loadingCtrl.create({
+      content: "Atualizando..."
+    });
+    loading.present();
+
+    firebase.firestore().collection("escolas").doc(this.escola.id).update({
+      nome: this.escola.nome,
+        sigla: this.escola.sigla,
+        telefone: this.escola.telefone,
+        email: this.escola.email,
+        endereco: this.escola.endereco,
+        cidade: this.escola.cidade,
+        estado: this.escola.estado
+    }).then(() => {
+      this.voltar();
+      loading.dismiss();
+      this.toastCtrl.create({
+        message: "Escola atualizada! :)",
+        duration: 3000
+      }).present();
+    }).catch((erro) => {
+      console.log(erro);
+      loading.dismiss();
+      this.toastCtrl.create({
+        message: "Ocorreu um erro inesperado. :(",
+        duration: 3000
+      }).present();
+    });
+  }
+
+  voltar() {
+    if(this.navCtrl.canGoBack()) {
+      this.navCtrl.pop();
+    } else {
+      this.navCtrl.setRoot('HomePage');
+    }
+  }
 }

@@ -1,4 +1,4 @@
-export interface Escola {
+export class Escola {
   nome: string;
   sigla: string;
   telefone: string;
@@ -6,5 +6,18 @@ export interface Escola {
   endereco: string;
   cidade: string;
   estado: string;
-  userId: string;
+  user: string;
+
+  id?: string;
+
+  constructor() {
+    this.nome = "";
+    this.sigla = "";
+    this.telefone = "";
+    this.email = "";
+    this.endereco = "";
+    this.cidade = "";
+    this.estado = "";
+    this.user = "";
+  }
 }
