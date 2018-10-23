@@ -16,6 +16,10 @@ export class Disciplina {
     this.nome = "";
     this.sigla = "";
     this.periodo = "";
+    this.notaMin = 0;
+    this.notaMax = 10;
+    this.notaMed = 5;
     this.formula = new Formula;
+    this.user = "";
   }
 }

@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ToastController, LoadingController } from 'ionic-angular';
+
 import firebase from 'firebase';
+
+import { Disciplina } from '../../models/disciplina.model';
+import { Periodo } from '../../models/periodo.model';
+import { Curso } from '../../models/curso.model';
 
 @IonicPage()
 @Component({
@@ -9,61 +14,82 @@ import firebase from 'firebase';
 })
 export class InfoDisciplinaPage {
 
-  disciplina: any = {};
-  periodo: any = {};
-  curso: any = {};
-
-  nomePeriodo: string = "";
-  nomeCurso: string = "";
+  disciplina: Disciplina;
+  periodo: Periodo;
+  curso: Curso;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
+    public loadingCtrl: LoadingController,
     private alertCtrl: AlertController
   ) {
-    this.disciplina = this.navParams.get("disciplina");
+    this.disciplina = new Disciplina;
+    this.periodo = new Periodo;
+    this.curso = new Curso;
+  }
 
-    if(this.disciplina == undefined) {
-      this.navCtrl.setRoot('DisciplinasPage');
-    } else {
-      this.updatePage();
-    }
-
+  ionViewDidEnter() {
+    this.updatePage();
   }
 
   updatePage() {
-    firebase.firestore().collection("periodos").doc(this.disciplina.data().periodo).get()
-    .then((doc) => {
-      console.log("Periodo Encontrado");
-      this.periodo = doc;
-      this.nomePeriodo = this.periodo.data().nome;
+    let dadosDisciplina = this.navParams.get("disciplina");
 
-      firebase.firestore().collection("cursos").doc(this.periodo.data().curso).get()
-      .then((doc) => {
-        console.log("Curso Encontrado");
-        this.curso = doc;
-        this.nomeCurso = this.curso.data().nome;
-      }).catch((erro) => {
-        console.log("Erro ao Encontrar o Curso: ", this.periodo.data().curso);
-        console.log(erro);
+    if(dadosDisciplina != undefined) {
+      this.disciplina = dadosDisciplina;
+
+      let loading = this.loadingCtrl.create({
+        content: "Carregando..."
       });
-    }).catch((erro) => {
-      console.log("Erro ao Encontrar o Periodo: ", this.disciplina.data().periodo);
-      console.log(erro);
-    });
+      loading.present();
 
+      firebase.firestore().collection("periodos").doc(this.disciplina.periodo).get()
+      .then((periodo) => {
+        this.periodo = {
+          nome: periodo.data().nome,
+          sigla: periodo.data().sigla,
+          tipo: periodo.data().tipo,
+          user: periodo.data().user,
+          curso: periodo.data().curso,
+          id: periodo.id
+        };
+        firebase.firestore().collection("cursos").doc(this.periodo.curso).get()
+        .then((curso) => {
+          this.curso = {
+            nome: curso.data().nome,
+            sigla: curso.data().sigla,
+            dataInicio: curso.data().dataInicio,
+            dataFinalizacao: curso.data().dataFinalizacao,
+            escola: curso.data().escola,
+            user: curso.data().user,
+            id: curso.id
+          };
+          loading.dismiss();
+        }).catch((erro) => {
+          console.log(erro);
+          loading.dismiss();
+          this.toastCtrl.create({
+            message: "Ocorreu um erro inesperado. :(",
+            duration: 3000
+          }).present();
+        });
+      }).catch((erro) => {
+        console.log(erro);
+        loading.dismiss();
+        this.toastCtrl.create({
+          message: "Ocorreu um erro inesperado. :(",
+          duration: 3000
+        }).present();
+      });
+    }
   }
 
   alterar() {
     this.navCtrl.push('CadDisciplinaPage', {
       disciplina: this.disciplina,
-      periodo: this.periodo,
-      nomePeriodo: this.nomePeriodo,
-      curso: this.curso,
-      nomeCurso: this.nomeCurso,
-      periodoId: this.periodo.id,
-      cursoId: this.curso.id
+      curso: this.curso
     });
 
   }
@@ -79,17 +105,24 @@ export class InfoDisciplinaPage {
         {
           text: "Sim",
           handler: () => {
+            let loading = this.loadingCtrl.create({
+              content: "Deletando..."
+            });
+            loading.present();
+
             firebase.firestore().collection("disciplinas").doc(this.disciplina.id).delete()
             .then(() => {
-              console.log("Disciplina Excluida");
-              this.navCtrl.setRoot('CursosPage');
+              this.navCtrl.setRoot('DisciplinasPage');
+              loading.dismiss();
               this.toastCtrl.create({
-                message: "Disciplina excluida com sucesso.",
+                message: "Disciplina excluída.",
                 duration: 3000
               }).present();
-            }).catch(() => {
+            }).catch((erro) => {
+              console.log(erro);
+              loading.dismiss();
               this.toastCtrl.create({
-                message: "Não foi possivel excluir a disciplina.",
+                message: "Ocorreu um erro inesperado. :(",
                 duration: 3000
               }).present();
             });
@@ -98,5 +131,13 @@ export class InfoDisciplinaPage {
       ]
     }).present();
 
+  }
+
+  voltar() {
+    if(this.navCtrl.canGoBack()) {
+      this.navCtrl.pop();
+    } else {
+      this.navCtrl.setRoot('HomePage');
+    }
   }
 }

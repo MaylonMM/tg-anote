@@ -34,10 +34,10 @@ export class CursosPage {
 
     if(user != null) {
       this.uid = user.uid;
-      let loadind = this.loadingCtrl.create({
+      let loading = this.loadingCtrl.create({
         content: "Carregando Cursos..."
       });
-      loadind.present();
+      loading.present();
 
       firebase.firestore().collection("cursos")
       .where("user", "==", this.uid)
@@ -55,10 +55,10 @@ export class CursosPage {
             id: curso.id
           });
         });
-        loadind.dismiss();
+        loading.dismiss();
       }).catch((erro) => {
         console.log(erro);
-        loadind.dismiss();
+        loading.dismiss();
         this.toastCtrl.create({
           message: "Ocorreu um erro inesperado. :(",
           duration: 3000

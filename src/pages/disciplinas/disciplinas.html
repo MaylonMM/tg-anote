@@ -1,23 +1,28 @@
 <ion-header>
   <ion-navbar color="back">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
     <ion-title>Minhas Disciplinas</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h4 *ngIf="!disciplinas">
-    Você ainda não tem disciplinas cadastradas
-  </h4>
+  <ion-card *ngIf="disciplinas.length == 0">
+    <ion-card-header>
+      <ion-icon item-start name="filing"></ion-icon>
+      Sem Disciplinas Cadastradas
+    </ion-card-header>
+    <ion-card-content>
+      <p>Você ainda não tem nenhuma disciplina cadastrada. Clique no botão <ion-icon name="add-circle"></ion-icon> logo abaixo para cadastrar sua primeira disciplina e manter o controle de tudo! :)</p>
+    </ion-card-content>
+  </ion-card>
 
-  <button ion-button *ngIf="!uid" block round color="back" class="btn" (click)="update()">Atualizar</button>
+  <ion-list *ngIf="disciplinas.length != 0">
+    <ion-item class="item-prim"><ion-label>Disciplinas</ion-label></ion-item>
 
-  <ion-list>
-    <button ion-item *ngFor="let disciplina of disciplinas" (click)="goInfo(disciplina)">
-      {{ disciplina.data().nome }}
+    <button ion-item no-lines class="item-sec" *ngFor="let disciplina of disciplinas" (click)="goInfo(disciplina)">
+      <ion-icon item-start color="back" name="book"></ion-icon>
+      <h2>{{ disciplina.nome }}</h2>
+      <p>{{ disciplina.sigla }}</p>
     </button>
   </ion-list>
 
@@ -26,4 +31,6 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
+
+  <button ion-button *ngIf="uid == ''" block round color="laranja" (click)="updatePage()">Atualizar</button>
 </ion-content>

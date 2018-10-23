@@ -7,7 +7,7 @@ export class Formula {
 
   constructor() {
     this.tipo = "media";
-    this.expressao = "";
+    this.expressao = "0";
     this.variaveis = [];
   }
 }

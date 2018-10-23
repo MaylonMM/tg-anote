@@ -5,61 +5,66 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list style="width: 95%">
-    <ion-item>
-      <ion-label>Informações Gerais</ion-label>
-    </ion-item>
+  <ion-list>
+    <ion-item class="item-prim"><ion-label>Informações Gerais</ion-label></ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="bookmarks" color="back"></ion-icon>
-      <ion-select placeholder="curso" [(ngModel)]="curso" (ionChange)="onSelectChange($event)" [selectOptions]="selectOptCurso" submitText="Ok" cancelText="Cancelar" >
-        <ion-option *ngFor="let curso of cursos">{{ curso.data().nome }}</ion-option>
+      <ion-label stacked>Selecione o Curso</ion-label>
+      <ion-select [selectOptions]="selectOptCurso" [(ngModel)]="curso.id" (ionChange)="onChangeCurso()" cancelText="Cancelar" >
+        <ion-option *ngFor="let curso of cursos" value="{{ curso.id }}">{{ curso.nome }}</ion-option>
       </ion-select>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="browsers" color="back"></ion-icon>
-      <ion-select placeholder="periodo" [(ngModel)]="periodo" [selectOptions]="selectOptPeriodo" submitText="Ok" cancelText="Cancelar" >
-        <ion-option *ngFor="let periodo of periodos" value="{{ periodo.id }}" >{{ periodo.data().nome }}</ion-option>
+      <ion-label stacked>Selecione o Período</ion-label>
+      <ion-select [selectOptions]="selectOptPeriodo" [(ngModel)]="disciplina.periodo" cancelText="Cancelar" >
+        <ion-option *ngFor="let periodo of periodos" value="{{ periodo.id }}" >{{ periodo.nome }}</ion-option>
       </ion-select>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="book" color="back"></ion-icon>
-      <ion-input type="text" placeholder="nome da disciplina" [(ngModel)]="nome"></ion-input>
+      <ion-label stacked>Nome da Disciplina</ion-label>
+      <ion-input type="text" [(ngModel)]="disciplina.nome"></ion-input>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="remove" color="back"></ion-icon>
-      <ion-input type="text" placeholder="sigla usada na disciplina" [(ngModel)]="sigla"></ion-input>
+      <ion-label stacked>Sigla da Disciplina</ion-label>
+      <ion-input type="text" [(ngModel)]="disciplina.sigla"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label>Sistema de Notas</ion-label>
-    </ion-item>
+    <ion-item class="label-sec"><ion-label>Sistema de Notas</ion-label></ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="arrow-up" color="back"></ion-icon>
-      <ion-input type="number" placeholder="nota máxima da disciplina" [(ngModel)]="notaMax"></ion-input>
+      <ion-label stacked>Nota Máxima</ion-label>
+      <ion-input type="number" [(ngModel)]="disciplina.notaMax"></ion-input>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="arrow-down" color="back"></ion-icon>
-      <ion-input type="number" placeholder="nota mínima da disciplina" [(ngModel)]="notaMin"></ion-input>
+      <ion-label stacked>Nota Mínima</ion-label>
+      <ion-input type="number" [(ngModel)]="disciplina.notaMin"></ion-input>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="checkmark" color="back"></ion-icon>
-      <ion-input type="number" placeholder="nota média para aprovação" [(ngModel)]="notaMed"></ion-input>
+      <ion-label stacked>Nota Média (Nota para Aprovação)</ion-label>
+      <ion-input type="number" [(ngModel)]="disciplina.notaMed"></ion-input>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="calculator" color="back"></ion-icon>
-      <ion-input type="text" placeholder="adicionar fórmula" [(ngModel)]="formula.expressao" disabled="true" (click)="addFormula()"></ion-input>
+      <ion-label stacked>Fórmula para Cálculo da Média</ion-label>
+      <ion-input type="text" [(ngModel)]="disciplina.formula.expressao" disabled="true"></ion-input>
+      <button ion-button item-end round color="back" (click)="addFormula()">Adicionar</button>
     </ion-item>
-
-    <button ion-button *ngIf="!uid" block round color="laranja" class="btn" (click)="updatePage()">Atualizar</button>
-
-    <button ion-button block round color="back" class="btn" (click)="salvar()">Salvar</button>
   </ion-list>
+
+  <button ion-button block round color="back" (click)="salvar()">Salvar</button>
+  <button ion-button block outline round color="back" (click)="voltar()">Voltar</button>
+  <button ion-button *ngIf="uid == ''" block round color="laranja" (click)="updatePage()">Atualizar</button>
 </ion-content>

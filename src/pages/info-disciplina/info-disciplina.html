@@ -1,67 +1,56 @@
 <ion-header>
   <ion-navbar color="back">
-    <ion-title>Informações</ion-title>
+    <ion-title>Informações da Disciplina</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-card-header>
-        Informações Gerais
-      </ion-card-header>
+      <h2>{{ disciplina.nome }}</h2>
+      <h2>{{ disciplina.sigla }}</h2>
+    </ion-card-header>
 
-      <ion-list>
-        <ion-item>
-          <p>Disciplina</p>
-          <h2>{{ disciplina.data().nome }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Sigla da Disciplina</p>
-          <h2>{{ disciplina.data().sigla }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Curso</p>
-          <h2>{{ nomeCurso }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Periodo</p>
-          <h2>{{ nomePeriodo }}</h2>
-        </ion-item>
-      </ion-list>
+    <ion-card-content>
+      <label>Curso e Período</label>
+      <h2><ion-icon color="back" name="bookmarks"></ion-icon>{{ curso.nome }}</h2>
+      <h3><ion-icon color="back" name="book"></ion-icon>{{ periodo.nome }}</h3>
+    </ion-card-content>
   </ion-card>
 
   <ion-card>
     <ion-card-header>
-        Sistema de Notas
-      </ion-card-header>
+      <h2>Sistema de Notas</h2>
+    </ion-card-header>
 
-      <ion-list>
-        <ion-item>
-          <p>Nota Máxima</p>
-          <h2>{{ disciplina.data().notaMax }}</h2>
-        </ion-item>
+    <ion-card-content>
+      <label>Notas</label>
+      <ion-grid>
+        <ion-row>
+          <ion-col><label>Mínima</label></ion-col>
+          <ion-col><label>Média</label></ion-col>
+          <ion-col><label>Máxima</label></ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col><h2><ion-icon color="back" name="arrow-down"></ion-icon>{{ disciplina.notaMin }}</h2></ion-col>
+            <ion-col><h2><ion-icon color="back" name="checkmark"></ion-icon>{{ disciplina.notaMed }}</h2></ion-col>
+            <ion-col><h2><ion-icon color="back" name="arrow-up"></ion-icon>{{ disciplina.notaMax }}</h2></ion-col>
+          </ion-row>
+      </ion-grid>
 
-        <ion-item>
-          <p>Nota Mínima</p>
-          <h2>{{ disciplina.data().notaMin }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Nota Média para Aprovação</p>
-          <h2>{{ disciplina.data().notaMed }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Fórmula para Cálculo da Média</p>
-          <h2>{{ disciplina.data().formula.expressao }}</h2>
-        </ion-item>
-      </ion-list>
+      <label>Fórmula para Cálculo da Média</label>
+      <h2><ion-icon color="back" name="calculator"></ion-icon>{{ disciplina.formula.expressao }}</h2>
+    </ion-card-content>
   </ion-card>
 
-  <button ion-button block round color="back" style="margin-top: 30px;" (click)="alterar()">Alterar</button>
+  <ion-grid>
+      <ion-row>
+        <ion-col><button ion-button block round color="danger" (click)="deletar()">Deletar</button></ion-col>
+        <ion-col><button ion-button block round color="back" (click)="alterar()">Alterar</button></ion-col>
+      </ion-row>
 
-  <button ion-button block round color="danger" style="margin-top: 10px;" (click)="deletar()">Deletar</button>
+      <ion-row>
+        <ion-col><button ion-button block outline round color="back" (click)="voltar()">Voltar</button></ion-col>
+      </ion-row>
+    </ion-grid>
 </ion-content>
