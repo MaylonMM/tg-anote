@@ -1,7 +1,18 @@
 page-info-curso {
+  //fundo
   ion-content {
     .scroll-content {
       background-color: map-get($colors, backSec);
     }
+  }
+
+  //label com menos destaque
+  label {
+    color: dimgray;
+  }
+
+  //espaçamento do icone para o texto
+  ion-icon {
+    padding-right: 10px;
   }
 }

@@ -1,24 +1,44 @@
 page-cad-curso {
+  //fundo da tela
   ion-content {
     .scroll-content {
-      background-color: map-get($colors, backSec)
+      background-color: map-get($colors, backSec);
     }
   }
 
-  .item {
-    background-color: map-get($colors, backSec)
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
   }
 
-  ion-label {
-    padding-top: 15px;
+  //ion-item secundário
+  .label-sec {
+    background-color: map-get($colors, backSec);
+    padding-top: 10px;
   }
 
-  .rowStyle {
+  //ion-item secundário
+  .item-sec {
     background-color: white;
-    padding-left: 15px;
     border-radius: 30px;
     margin-top: 10px;
   }
+
+  //ion-item de dentro do período
+  .item-terc {
+    background-color: white;
+    border-radius: 30px;
+    margin-top: 10px;
+  }
+
+  //ion-item de fora do período
+  .item-quart {
+    background-color: map-get($colors, backTerc);
+    border-radius: 15px;
+    margin-top: 10px;
+    padding: 5px;
+  }
+
   .rowStyle2 {
     background-color: map-get($colors, backSec);
   }

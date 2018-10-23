@@ -33,13 +33,11 @@ export class EscolasPage {
     let user = firebase.auth().currentUser;
 
     if(user != null) {
-      let loadind = this.loadingCtrl.create({
+      this.uid = user.uid;
+      let loading = this.loadingCtrl.create({
         content: "Carregando Escolas..."
       });
-
-
-      loadind.present();
-      this.uid = user.uid;
+      loading.present();
 
       firebase.firestore().collection("escolas")
       .where("user", "==", this.uid)
@@ -59,10 +57,10 @@ export class EscolasPage {
             id: escola.id
           });
         });
-        loadind.dismiss();
+        loading.dismiss();
       }).catch((erro) => {
         console.log(erro);
-        loadind.dismiss();
+        loading.dismiss();
         this.toastCtrl.create({
           message: "Ocorreu um erro inesperado. :(",
           duration: 3000

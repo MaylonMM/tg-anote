@@ -1,21 +1,28 @@
 <ion-header>
   <ion-navbar color="back">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
     <ion-title>Meus Cursos</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h4 *ngIf="!cursos">
-    Você ainda não tem cursos cadastrados
-  </h4>
+  <ion-card *ngIf="cursos.length == 0">
+    <ion-card-header>
+      <ion-icon item-start name="filing"></ion-icon>
+      Sem Cursos Cadastrados
+    </ion-card-header>
+    <ion-card-content>
+      <p>Você ainda não tem cursos cadastradaos. Clique no botão <ion-icon name="add-circle"></ion-icon> logo abaixo para cadastrar seu primeiro curso! :)</p>
+    </ion-card-content>
+  </ion-card>
 
-  <ion-list>
-    <button ion-item *ngFor="let curso of cursos" (click)="goInfo(curso)">
-      {{ curso.data().nome }}
+  <ion-list *ngIf="cursos.length != 0">
+    <ion-item class="item-prim"><ion-label>Cursos</ion-label></ion-item>
+
+    <button ion-item no-lines class="item-sec" *ngFor="let curso of cursos" (click)="goInfo(curso)">
+      <ion-icon item-start color="back" name="bookmarks"></ion-icon>
+      <h2>{{ curso.nome }}</h2>
+      <p>{{ curso.sigla }}</p>
     </button>
   </ion-list>
 
@@ -24,4 +31,6 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
+
+  <button ion-button *ngIf="uid == ''" block round color="laranja" (click)="updatePage()">Atualizar</button>
 </ion-content>

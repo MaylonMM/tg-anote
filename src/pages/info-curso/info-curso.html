@@ -1,60 +1,49 @@
 <ion-header>
-    <ion-navbar color="back">
-      <ion-title>Informações</ion-title>
-    </ion-navbar>
-  </ion-header>
+  <ion-navbar color="back">
+    <ion-title>Informações do Curso</ion-title>
+  </ion-navbar>
+</ion-header>
 
-  <ion-content padding>
-    <ion-card>
-      <ion-card-header>
-        Informações Gerais
-      </ion-card-header>
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      <h2>{{ curso.nome }}</h2>
+      <h2>{{ curso.sigla }}</h2>
+    </ion-card-header>
 
-      <ion-list>
-        <ion-item>
-          <p>Escola</p>
-          <h2>{{ nomeEscola }}</h2>
-        </ion-item>
+    <ion-card-content>
+      <label>Data de Início</label>
+      <h2><ion-icon color="back" name="calendar"></ion-icon>{{ startDate }}</h2>
+      <label>Data/Previsão de Finalização</label>
+      <h2><ion-icon color="back" name="calendar"></ion-icon>{{ endDate }}</h2>
+    </ion-card-content>
+  </ion-card>
 
-        <ion-item>
-          <p>Curso</p>
-          <h2>{{ curso.data().nome }}</h2>
-        </ion-item>
+  <ion-card *ngIf="periodos.length != 0">
+    <ion-card-header>
+      <h2>Períodos</h2>
+    </ion-card-header>
 
-        <ion-item>
-          <p>Sigla do Curso</p>
-          <h2>{{ curso.data().sigla }}</h2>
-        </ion-item>
+    <ion-card-content *ngFor="let periodo of periodos">
+      <h2><ion-icon color="back" name="book"></ion-icon>{{ periodo.nome }}</h2>
+      <h3><ion-icon color="back" name="calendar"></ion-icon>{{ periodo.tipo }}</h3>
+    </ion-card-content>
+  </ion-card>
 
-        <ion-item>
-          <p>Data de Início</p>
-          <h2>{{ curso.data().dataInicio }}</h2>
-        </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <button ion-button block round color="danger" (click)="deletar()">Deletar</button>
+      </ion-col>
+      <ion-col>
+        <button ion-button block round color="back" (click)="alterar()">Alterar</button>
+      </ion-col>
+    </ion-row>
 
-        <ion-item>
-          <p>Data de Finalização</p>
-          <h2>{{ curso.data().dataFinalizacao }}</h2>
-        </ion-item>
-      </ion-list>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        Períodos Letivos
-      </ion-card-header>
-
-      <ion-list>
-        <ion-item *ngFor="let periodo of periodos">
-          <p>Periodo</p>
-          <h2>{{ periodo.data().nome }}</h2>
-          <p>Sigla</p>
-          <h2>{{ periodo.data().sigla }}</h2>
-          <p>Tipo</p>
-          <h2>{{ periodo.data().tipo }}</h2>
-        </ion-item>
-      </ion-list>
-    </ion-card>
-
-    <button ion-button block round color="back" style="margin-top: 30px;" (click)="alterar()">Alterar</button>
-    <button ion-button block round color="danger" style="margin-top: 10px;" (click)="deletar()">Deletar</button>
-  </ion-content>
+    <ion-row>
+      <ion-col>
+        <button ion-button block outline round color="back" (click)="voltar()">Voltar</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -94,12 +94,12 @@ export class CadEscolaPage {
 
     firebase.firestore().collection("escolas").doc(this.escola.id).update({
       nome: this.escola.nome,
-        sigla: this.escola.sigla,
-        telefone: this.escola.telefone,
-        email: this.escola.email,
-        endereco: this.escola.endereco,
-        cidade: this.escola.cidade,
-        estado: this.escola.estado
+      sigla: this.escola.sigla,
+      telefone: this.escola.telefone,
+      email: this.escola.email,
+      endereco: this.escola.endereco,
+      cidade: this.escola.cidade,
+      estado: this.escola.estado
     }).then(() => {
       this.voltar();
       loading.dismiss();

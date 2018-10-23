@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
+
 import firebase from 'firebase';
+import moment from 'moment';
+
+import { Curso } from '../../models/curso.model';
+import { Periodo } from '../../models/periodo.model';
 
 @IonicPage()
 @Component({
@@ -9,49 +14,77 @@ import firebase from 'firebase';
 })
 export class InfoCursoPage {
 
-  curso: any = {};
-  escola: any = {};
-  periodos: any[] = [];
-  nomeEscola: string = "";
+  curso: Curso;
+  periodos: Periodo[];
+  startDate: string;
+  endDate: string;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private toastCtrl: ToastController,
+    public loadingCtrl: LoadingController,
     private alertCtrl: AlertController
   ) {
-    this.curso = this.navParams.get("curso");
-
-    firebase.firestore().collection("escolas").doc(this.curso.data().escola).get()
-    .then((doc) => {
-      this.escola = doc
-      this.nomeEscola = this.escola.data().nome;
-    }).catch((erro) => {
-      console.log(erro);
-    });
-
-    firebase.firestore().collection("periodos").where("curso", "==", this.curso.id).get()
-    .then((data) => {
-      this.periodos = data.docs;
-    }).catch((erro) => {
-      console.log(erro);
-    });
+    moment.locale('pt-BR');
+    this.curso = new Curso;
+    this.periodos = [];
+    this.startDate = "";
+    this.endDate = "";
   }
 
-  ionViewDidLoad(){
+  ionViewDidEnter() {
+    this.updatePage();
+  }
 
+  updatePage() {
+    let dadosCurso = this.navParams.get("curso");
+
+    if(dadosCurso != undefined) {
+      this.curso = dadosCurso;
+      this.startDate = moment(this.curso.dataInicio).add(moment(this.curso.dataInicio).utcOffset() * -1, "m").format("L LT");
+      this.endDate = moment(this.curso.dataFinalizacao).add(moment(this.curso.dataInicio).utcOffset() * -1, "m").format("L LT");
+
+      let loading = this.loadingCtrl.create({
+        content: "Carregando..."
+      });
+      loading.present();
+
+      firebase.firestore().collection("periodos")
+      .where("curso", "==", this.curso.id)
+      .orderBy("nome", "asc").get()
+      .then((data) => {
+        this.periodos = [];
+        data.docs.forEach((periodo) => {
+          this.periodos.push({
+            nome: periodo.data().nome,
+            sigla: periodo.data().sigla,
+            tipo: periodo.data().tipo,
+            user: periodo.data().user,
+            curso: periodo.data().curso,
+            id: periodo.id
+          });
+        });
+        loading.dismiss();
+      }).catch((erro) => {
+        console.log(erro);
+        loading.dismiss();
+        this.toastCtrl.create({
+          message: "Ocorreu um erro inesperado. :(",
+          duration: 3000
+        }).present();
+      });
+    }
   }
 
   alterar() {
     this.navCtrl.push('CadCursoPage', {
       curso: this.curso,
-      escola: this.nomeEscola,
       periodos: this.periodos
     })
   }
 
   deletar() {
-    console.log("Entrou no deletar");
     this.alertCtrl.create({
       title: "Cuidado",
       message: "Você REALMENTE deseja excluir esses dados?",
@@ -62,31 +95,37 @@ export class InfoCursoPage {
         {
           text: "Sim",
           handler: () => {
+            let loading = this.loadingCtrl.create({
+              content: "Deletando..."
+            });
+            loading.present();
+
             firebase.firestore().collection("cursos").doc(this.curso.id).delete()
             .then(() => {
-              firebase.firestore().collection("periodos").where("curso", "==", this.curso.id).get()
-              .then((data) => {
-                data.docs.forEach((doc) => {
-                  firebase.firestore().collection("periodos").doc(doc.id).delete()
-                  .then(() => {
-                    console.log("periodo deletado");
-                  }).catch((erro) => {
-                    console.log(erro);
-                  });
-                })
-              }).catch((erro) => {
-                console.log(erro);
+              this.periodos.forEach((periodo) => {
+                firebase.firestore().collection("periodos").doc(periodo.id).delete()
+                .then(() => {
+
+                }).catch((erro) => {
+                  console.log(erro);
+                  loading.dismiss();
+                  this.toastCtrl.create({
+                    message: "Ocorreu um erro inesperado. :(",
+                    duration: 3000
+                  }).present();
+                });
               });
-
               this.navCtrl.setRoot('CursosPage');
-
+              loading.dismiss();
               this.toastCtrl.create({
-                message: "Curso excluido com sucesso.",
+                message: "Curso excluído.",
                 duration: 3000
               }).present();
-            }).catch(() => {
+            }).catch((erro) => {
+              console.log(erro);
+              loading.dismiss();
               this.toastCtrl.create({
-                message: "Não foi possivel excluir o curso.",
+                message: "Ocorreu um erro inesperado. :(",
                 duration: 3000
               }).present();
             });
@@ -95,5 +134,13 @@ export class InfoCursoPage {
       ]
     }).present();
 
+  }
+
+  voltar() {
+    if(this.navCtrl.canGoBack()) {
+      this.navCtrl.pop();
+    } else {
+      this.navCtrl.setRoot('HomePage');
+    }
   }
 }
