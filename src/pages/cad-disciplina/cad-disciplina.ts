@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, ToastController, LoadingController
 
 import firebase from 'firebase';
 
-import { Formula } from '../../models/formula.model';
 import { Disciplina } from '../../models/disciplina.model';
 import { Curso } from '../../models/curso.model';
 import { Periodo } from '../../models/periodo.model';
@@ -90,39 +89,6 @@ export class CadDisciplinaPage {
       this.curso = this.navParams.get("curso");
       this.onChangeCurso();
     }
-
-    /*
-    if(this.disciplina != undefined) {
-      this.editando = true;
-
-      this.nome = this.disciplina.data().nome;
-      this.sigla = this.disciplina.data().sigla;
-      this.curso = this.navParams.get("nomeCurso");
-      this.cursoId = this.navParams.get("cursoId");
-
-      firebase.firestore().collection("periodos")
-      .where("user", "==", this.uid)
-      .where("curso", "==", this.cursoId)
-      .orderBy("nome", "asc").get()
-      .then((data) => {
-        console.log("Periodos Listados");
-        this.periodos = data.docs;
-        this.selectOptPeriodo = {
-          title: "Períodos",
-          subTitle: "Selecione um período"
-        };
-        this.periodo = this.navParams.get("periodoId");
-      }).catch((erro) => {
-        console.log("Erro ao Listar Periodos");
-        console.log(erro);
-      });
-
-      this.notaMin = this.disciplina.data().notaMin;
-      this.notaMax = this.disciplina.data().notaMax;
-      this.notaMed = this.disciplina.data().notaMed;
-      this.formula = this.disciplina.data().formula;
-      this.periodoId = this.navParams.get("periodoId");
-    }*/
   }
 
   onChangeCurso() {

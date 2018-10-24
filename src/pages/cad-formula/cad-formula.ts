@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+
 import firebase from 'firebase';
 import * as math from 'mathjs';
+
 import { Formula } from '../../models/formula.model';
+import { Disciplina } from '../../models/disciplina.model';
 
 @IonicPage()
 @Component({
@@ -11,11 +14,9 @@ import { Formula } from '../../models/formula.model';
 })
 export class CadFormulaPage {
 
-  formula: Formula;
-  disciplina: any = undefined;
-
-  uid: any = undefined;
-  media: boolean = true;
+  uid: string;
+  disciplina: Disciplina;
+  isMedia: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -23,14 +24,9 @@ export class CadFormulaPage {
     public viewCtrl: ViewController,
     public alertCtrl: AlertController
   ) {
-    this.formula = this.navParams.get("formula");
-    this.disciplina = this.navParams.get("disciplina");
-
-    if(this.formula.tipo == "media") {
-      this.media = true;
-    } else {
-      this.media = false;
-    }
+    this.uid = "";
+    this.disciplina = new Disciplina;
+    this.isMedia = true;
   }
 
   ionViewDidEnter() {
@@ -39,22 +35,30 @@ export class CadFormulaPage {
 
   updatePage() {
     let user = firebase.auth().currentUser;
+    let dadosDisciplina = this.navParams.get("disciplina");
 
     if(user != null) {
       this.uid = user.uid;
-    } else {
-      this.uid = undefined;
     }
 
+    if(dadosDisciplina != undefined) {
+      this.disciplina = dadosDisciplina;
+      if(this.disciplina.formula.tipo == "media") {
+        this.isMedia = true;
+      } else {
+        this.isMedia = false;
+      }
+    }
   }
 
   tecla(operacao: string) {
-    if(this.formula.expressao == "0") {
-      this.formula.expressao = "";
+    if(this.disciplina.formula.expressao == "0") {
+      this.disciplina.formula.expressao = "";
     }
+
     if(operacao == 'd') {
-      this.formula.expressao = "0";
-      this.formula.variaveis = [];
+      this.disciplina.formula.expressao = "0";
+      this.disciplina.formula.variaveis = [];
     } else if(operacao == 'f') {
       this.alertCtrl.create({
         title: "Nova Variável",
@@ -73,20 +77,20 @@ export class CadFormulaPage {
             text: "Adicionar",
             handler: (data) => {
               let flag = false;
-              this.formula.variaveis.forEach((v) => {
+              this.disciplina.formula.variaveis.forEach((v) => {
                 if(v.nome == data.var) {
                   flag = true;
                 }
               });
               if(!flag) {
-                this.formula.variaveis.push({
+                this.disciplina.formula.variaveis.push({
                   nome: data.var,
                   valor: 0
                 });
-                if(this.formula.tipo == "media") {
-                  this.formula.expressao = this.getExpressao();
+                if(this.disciplina.formula.tipo == "media") {
+                  this.disciplina.formula.expressao = this.getExpressao();
                 } else {
-                  this.formula.expressao = this.formula.expressao + data.var;
+                  this.disciplina.formula.expressao = this.disciplina.formula.expressao + data.var;
                 }
               } else {
                 this.alertCtrl.create({
@@ -104,16 +108,16 @@ export class CadFormulaPage {
         ]
       }).present();
     } else {
-      this.formula.expressao = this.formula.expressao + operacao;
+      this.disciplina.formula.expressao = this.disciplina.formula.expressao + operacao;
     }
   }
 
   onSelectChange(selectedValue: any) {
     if(selectedValue.checked == true) {
-      this.formula.tipo = "media";
-      this.formula.expressao = this.getExpressao();
+      this.disciplina.formula.tipo = "media";
+      this.disciplina.formula.expressao = this.getExpressao();
     } else {
-      this.formula = {
+      this.disciplina.formula = {
         tipo: "pers",
         expressao: "0",
         variaveis: []
@@ -124,10 +128,10 @@ export class CadFormulaPage {
   getExpressao() {
     let exp = "";
 
-    if(this.formula.variaveis.length > 0) {
+    if(this.disciplina.formula.variaveis.length > 0) {
       exp = "(";
       let cont = 0;
-      this.formula.variaveis.forEach((v) => {
+      this.disciplina.formula.variaveis.forEach((v) => {
         if(cont == 0) {
           exp = exp + v.nome;
         } else {
@@ -135,7 +139,7 @@ export class CadFormulaPage {
         }
         cont++;
       });
-      exp = exp + ")/" + this.formula.variaveis.length;
+      exp = exp + ")/" + this.disciplina.formula.variaveis.length;
     } else {
       exp = "0"
     }
@@ -145,13 +149,11 @@ export class CadFormulaPage {
 
   salvar() {
     if(this.validarExpressao()) {
-      console.log("Expressão Válida! :)");
       let data = {
-        formula: this.formula
+        formula: this.disciplina.formula
       };
       this.viewCtrl.dismiss(data);
     } else {
-      console.log("Expressão Inválida... :(");
       this.alertCtrl.create({
         title: "Fórmula Inválida!",
         message: "A fórmula que foi informada não é válida. Faça uma revisão e salve novamente.",
@@ -161,22 +163,22 @@ export class CadFormulaPage {
           }
         ]
       }).present();
-      this.formula.expressao = "0";
-      this.formula.variaveis = [];
+      this.disciplina.formula.expressao = "0";
+      this.disciplina.formula.variaveis = [];
     }
   }
 
   validarExpressao() {
     const parser = math.parser();
 
-    this.formula.variaveis.forEach((v) => {
+    this.disciplina.formula.variaveis.forEach((v) => {
       let inc = "";
       inc = inc + v.nome + " = " + v.valor;
       parser.eval(inc);
     });
 
     try{
-      parser.eval(this.formula.expressao);
+      parser.eval(this.disciplina.formula.expressao);
       return true;
     }catch{
       return false;
