@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ToastController, ActionSheetController } from 'ionic-angular';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import firebase from 'firebase';
 import moment from 'moment';
@@ -36,7 +37,9 @@ export class CadAnotacaoPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    public actionSheetCtrl: ActionSheetController,
+    private camera: Camera
   ) {
     this.uid = "";
     this.anotacao = new Anotacao;
@@ -146,7 +149,10 @@ export class CadAnotacaoPage {
         disciplina: this.anotacao.disciplina,
         variavel: this.anotacao.variavel,
         user: this.uid
-      }).then(() => {
+      }).then(async (doc) => {
+        if(this.anotacao.image != "") {
+          await this.upload(doc.id);
+        }
         this.navCtrl.setRoot('AgendaPage');
         loading.dismiss();
         this.toastCtrl.create({
@@ -294,24 +300,107 @@ export class CadAnotacaoPage {
     this.anotacao.endTime = this.anotacao.endTime;
   }
 
-  carregarVariaveis() {
-    /*
-    if(this.tipo == "Avaliação" || this.tipo == "Trabalho" || this.tipo == "Lição de Casa") {
+  addFoto() {
+    let act = this.actionSheetCtrl.create({
+      title: "Selecione",
+      buttons: [
+        {
+          text: "Galeria",
+          icon: "image",
+          handler: () => {
+            this.carregarGaleria();
+          }
+        },
+        {
+          text: "Câmera",
+          icon: "camera",
+          handler: () => {
+            this.carregarCamera();
+          }
+        },
+        {
+          text: "Cancelar",
+          icon: "close"
+        }
+      ]
+    });
+    act.present();
+  }
+
+  carregarGaleria() {
+    let options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      allowEdit: false
+    }
+
+    this.camera.getPicture(options)
+    .then((base64Image) => {
+      this.anotacao.image = "data:image/png;base64," + base64Image;
+    }).catch((erro) => {
+      console.log(erro);
+    });
+  }
+
+  carregarCamera() {
+    let options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      allowEdit: false
+    }
+
+    this.camera.getPicture(options)
+    .then((base64Image) => {
+      this.anotacao.image = "data:image/png;base64," + base64Image;
+    }).catch((erro) => {
+      console.log(erro);
+    });
+  }
+
+  upload(nome: string) {
+    return new Promise((resolve, reject) => {
       let loading = this.loadingCtrl.create({
-        content: "Carregando Notas..."
+        content: "Enviando Imagem..."
       });
       loading.present();
+      let ref = firebase.storage().ref("anotacoesImages/" + nome);
+      let uploadTask = ref.putString(this.anotacao.image.split(',')[1], "base64");
 
-      firebase.firestore().collection("disciplinas").doc(this.disciplina).get()
-      .then((doc) => {
-        this.formula = doc.data().formula;
-        loading.dismiss();
-      }).catch((erro) => {
+      uploadTask.on("state_changed", (taskSnapshot: any) => {
+        console.log(taskSnapshot);
+        let porcentagem = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
+        loading.setContent(porcentagem + "% Enviado...");
+      }, (erro) => {
         console.log(erro);
-        loading.dismiss();
+      }, () => {
+        console.log("A imagem foi enviada! :)");
+        uploadTask.snapshot.ref.getDownloadURL()
+        .then((url) => {
+          firebase.firestore().collection("anotacoes").doc(nome).update({
+            image: url
+          }).then(() => {
+            loading.dismiss();
+            resolve();
+          }).catch((erro) => {
+            console.log(erro);
+            loading.dismiss();
+            reject();
+          });
+        }).catch((erro) => {
+          console.log(erro);
+          loading.dismiss();
+          reject();
+        });
       });
-    }
-    */
+    });
   }
 
   voltar() {

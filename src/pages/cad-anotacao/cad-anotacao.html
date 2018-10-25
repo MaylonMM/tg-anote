@@ -79,6 +79,16 @@
       <ion-label stacked>Observações</ion-label>
       <ion-textarea rows="10" [(ngModel)]="anotacao.obs"></ion-textarea>
     </ion-item>
+
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="images" color="back"></ion-icon>
+      <ion-label>Imagem</ion-label>
+      <button ion-button item-end round color="back" (click)="addFoto()">Adicionar</button>
+    </ion-item>
+
+    <ion-item class="item-sec" no-lines *ngIf="anotacao.image != ''">
+      <img center [src]="anotacao.image">
+    </ion-item>
   </ion-list>
 
   <button ion-button block round color="back" (click)="salvar()">Salvar</button>

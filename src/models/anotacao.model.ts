@@ -5,6 +5,7 @@ export class Anotacao {
   endTime: string;
   diaTodo: boolean;
   obs: string;
+  image: string;
   disciplina: string;
   variavel: string;
   user: string;
@@ -18,6 +19,7 @@ export class Anotacao {
     this.endTime = "";
     this.diaTodo = false;
     this.obs = "";
+    this.image = "";
     this.disciplina = "";
     this.variavel = "";
     this.user = "";

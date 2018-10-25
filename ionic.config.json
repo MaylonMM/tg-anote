@@ -1,5 +1,7 @@
 {
   "name": "anote",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }
