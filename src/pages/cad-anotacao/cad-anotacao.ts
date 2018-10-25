@@ -1,9 +1,12 @@
-import { Variavel } from './../../models/variavel.model';
-import { Formula } from './../../models/formula.model';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
+
 import firebase from 'firebase';
 import moment from 'moment';
+
+import { Anotacao } from '../../models/anotacao.model';
+import { Disciplina } from '../../models/disciplina.model';
+import { SelectOpt } from '../../models/selectOpt.model';
 
 @IonicPage()
 @Component({
@@ -12,33 +15,22 @@ import moment from 'moment';
 })
 export class CadAnotacaoPage {
 
-  uid: any = undefined;
-  titulo: string = "";
-  tipo: string = "";
-  disciplina: any = "";
-  startTime: any = undefined;
-  endTime: any = undefined;
-  diaTodo: boolean = false;
-  obs: string = "";
-
-  formula: Formula = {
-    tipo: "",
-    expressao: "",
-    variaveis: []
-  }
-  variavel: Variavel = {
-    nome: "",
-    valor: 0
-  }
-
-  disciplinas: any[] = [];
-  selectOptDisciplina: any = {};
-  tipos: string[] = [];
-  selectOptTipo: any = {};
-  selectOptNota: any = {};
-
-  editando: boolean = false;
-  anotacao: any = undefined;
+  uid: string;
+  anotacao: Anotacao;
+  disciplina: Disciplina;
+  disciplinas: Disciplina[];
+  selectOptDisciplina: SelectOpt;
+  selectOptTipo: SelectOpt;
+  selectOptNota: SelectOpt;
+  tipos: string[];
+  edit: boolean;
+  vincNota: boolean;
+  nota: number;
+  dataMinA: string;
+  dataMaxA: string;
+  dataMinB: string;
+  dataMaxB: string;
+  tipoData: string;
 
   constructor(
     public navCtrl: NavController,
@@ -46,26 +38,24 @@ export class CadAnotacaoPage {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController
   ) {
-    this.startTime = moment(this.startTime).add(moment(this.startTime).utcOffset(), 'm').toISOString();
-    this.endTime = moment(this.endTime).add(moment(this.endTime).utcOffset() + 60, 'm').toISOString();
-    this.selectOptDisciplina = {
-      title: "Disciplinas",
-      subTitle: "Selecione uma disciplina"
-    };
-    this.selectOptTipo = {
-      title: "Tipos",
-      subTitle: "Selecione um tipo de anotação"
-    };
-    this.selectOptNota = {
-      title: "Notas",
-      subTitle: "Selecione um uma nota para vincular a anotação"
-    };
-    this.tipos = [
-      "Avaliação",
-      "Trabalho",
-      "Lição de Casa",
-      "Lembrete"
-    ];
+    this.uid = "";
+    this.anotacao = new Anotacao;
+    this.disciplina = new Disciplina;
+    this.disciplinas = [];
+    this.selectOptDisciplina = { title: "Disciplinas", subTitle: "Selecione uma disciplina" };
+    this.selectOptTipo = { title: "Tipos", subTitle: "Selecione um tipo de anotação" };
+    this.selectOptNota = { title: "Notas", subTitle: "Selecione um uma nota para vincular a anotação" };
+    this.tipos = [ "Avaliação", "Trabalho", "Lição de Casa", "Lembrete", "Outro" ];
+    this.edit = false;
+    this.vincNota = false;
+    this.nota = 0;
+    this.anotacao.startTime = moment(new Date()).add(moment(new Date()).utcOffset(), 'm').toISOString();
+    this.anotacao.endTime = moment(new Date()).add(moment(new Date()).utcOffset() + 60, 'm').toISOString();
+    this.dataMinA = moment().add(-20, 'y').toISOString();
+    this.dataMaxA = moment(new Date(this.anotacao.endTime)).toISOString();
+    this.dataMinB = moment(new Date(this.anotacao.startTime)).toISOString();
+    this.dataMaxB = moment().add(20, 'y').toISOString();
+    this.tipoData = "DD/MM/YYYY HH:mm"
   }
 
   ionViewDidEnter() {
@@ -74,38 +64,53 @@ export class CadAnotacaoPage {
 
   updatePage() {
     let user = firebase.auth().currentUser;
+    let dadosAnotacao = this.navParams.get("anotacao");
 
     if(user != null) {
       this.uid = user.uid;
-
-      let loadind = this.loadingCtrl.create({
+      let loading = this.loadingCtrl.create({
         content: "Carregando Disciplinas..."
       });
-      loadind.present();
+      loading.present();
 
       firebase.firestore().collection("disciplinas")
       .where("user", "==", this.uid)
       .orderBy("nome", "asc").get()
       .then((data) => {
-        console.log("Disciplinas encontradas... Listando-as...");
-        this.disciplinas = data.docs;
-        loadind.dismiss();
+        this.disciplinas = [];
+        data.docs.forEach((disciplina) => {
+          this.disciplinas.push({
+            nome: disciplina.data().nome,
+            sigla: disciplina.data().sigla,
+            periodo: disciplina.data().periodo,
+            notaMax: disciplina.data().notaMax,
+            notaMed: disciplina.data().notaMed,
+            notaMin: disciplina.data().notaMin,
+            formula: disciplina.data().formula,
+            user: disciplina.data().user,
+            id: disciplina.id
+          });
+        });
+        loading.dismiss();
       }).catch((erro) => {
-        console.log("Erro ao tentar encontrar as disciplinas.");
         console.log(erro);
-        loadind.dismiss();
+        loading.dismiss();
+        this.toastCtrl.create({
+          message: "Ocorreu um erro inesperado. :(",
+          duration: 3000
+        }).present();
       });
-    } else {
-      this.uid = undefined;
     }
 
-    this.anotacao = this.navParams.get("anotacao");
-    if(this.anotacao != undefined) {
-      this.carregar();
+    if(dadosAnotacao != undefined) {
+      this.edit = true;
+      this.anotacao = dadosAnotacao;
+      this.disciplina = this.navParams.get("disciplina");
     }
   }
 
   carregar() {
+    /*
     this.editando = true;
     this.titulo = this.anotacao.data().titulo;
     this.tipo = this.anotacao.data().tipo;
@@ -116,61 +121,63 @@ export class CadAnotacaoPage {
     this.obs = this.anotacao.data().obs;
     this.variavel = this.anotacao.data().variavel;
     this.carregarVariaveis();
+    */
   }
 
   salvar() {
-    if(this.tipo == "Avaliação" || this.tipo == "Trabalho" || this.tipo == "Lição de Casa") {
-      this.formula.variaveis.forEach((v) => {
-        if(v.nome == this.variavel.nome) {
-          v.valor = this.variavel.valor;
-        }
-      });
+    this.anotacao.startTime = moment(new Date(this.anotacao.startTime)).toISOString();
+    this.anotacao.endTime = moment(new Date(this.anotacao.endTime)).toISOString();
 
-      firebase.firestore().collection("disciplinas").doc(this.disciplina).update({
-        formula: this.formula
-      }).then((doc) => {
-        console.log("Nota atualizada");
-      }).catch((erro) => {
-        console.log("Não deu pra atualizar a nota", erro);
-      });
-    }
-
-    if(!this.editando) {
+    if(this.edit) {
+      this.atualizar();
+    } else {
       let loading = this.loadingCtrl.create({
         content: "Salvando..."
       });
       loading.present();
 
       firebase.firestore().collection("anotacoes").add({
-        titulo: this.titulo,
-        tipo: this.tipo,
-        disciplina: this.disciplina,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        diaTodo: this.diaTodo,
-        obs: this.obs,
-        user: this.uid,
-        variavel: this.variavel
+        titulo: this.anotacao.titulo,
+        tipo: this.anotacao.tipo,
+        startTime: this.anotacao.startTime,
+        endTime: this.anotacao.endTime,
+        diaTodo: this.anotacao.diaTodo,
+        obs: this.anotacao.obs,
+        disciplina: this.anotacao.disciplina,
+        variavel: this.anotacao.variavel,
+        user: this.uid
       }).then(() => {
-        console.log("Anotação cadastrada!");
-        loading.dismiss();
         this.navCtrl.setRoot('AgendaPage');
+        loading.dismiss();
         this.toastCtrl.create({
-          message: "Anotação cadastrada com sucesso!",
+          message: "Anotação cadastrada! :)",
           duration: 3000
         }).present();
       }).catch((erro) => {
-        console.log("Erro ao cadastrar a anotação");
         console.log(erro);
         loading.dismiss();
         this.toastCtrl.create({
-          message: "Ocorreu um erro ao cadastrar essa anotação. Por favor, tente novamente.",
+          message: "Ocorreu um erro inesperado. :(",
           duration: 3000
         }).present();
       });
-    } else {
-      this.atualizar();
+
+      if(this.vincNota) {
+        firebase.firestore().collection("disciplinas").doc(this.disciplina.id).update({
+          formula: this.disciplina.formula
+        }).then(() => {
+
+        }).catch((erro) => {
+          console.log(erro);
+          loading.dismiss();
+          this.toastCtrl.create({
+            message: "Ocorreu um erro inesperado ao vincular a nota. :(",
+            duration: 3000
+          }).present();
+        });
+      }
     }
+
   }
 
   atualizar() {
@@ -180,38 +187,115 @@ export class CadAnotacaoPage {
     loading.present();
 
     firebase.firestore().collection("anotacoes").doc(this.anotacao.id).update({
-      titulo: this.titulo,
-      tipo: this.tipo,
-      disciplina: this.disciplina,
-      startTime: this.startTime,
-      endTime: this.endTime,
-      diaTodo: this.diaTodo,
-      obs: this.obs,
-      variavel: this.variavel
+      titulo: this.anotacao.titulo,
+      tipo: this.anotacao.tipo,
+      startTime: this.anotacao.startTime,
+      endTime: this.anotacao.endTime,
+      diaTodo: this.anotacao.diaTodo,
+      obs: this.anotacao.obs,
+      disciplina: this.anotacao.disciplina,
+      variavel: this.anotacao.variavel,
     }).then(() => {
-      console.log("Anotação Atualizada");
-      loading.dismiss();
       this.navCtrl.setRoot('AgendaPage');
+      loading.dismiss();
       this.toastCtrl.create({
-        message: "Anotação atualizada com sucesso!",
+        message: "Anotação atualizada! :)",
         duration: 3000
       }).present();
     }).catch((erro) => {
-      console.log("Erro ao atualizar a disciplina");
       console.log(erro);
       loading.dismiss();
       this.toastCtrl.create({
-        message: "Infelizmente ocorreu um erro ao atualizar a disciplina, por favor tente novamente.",
+        message: "Ocorreu um erro inesperado ao vincular a nota. :(",
         duration: 3000
       }).present();
     });
+
+    if(this.vincNota) {
+      firebase.firestore().collection("disciplinas").doc(this.disciplina.id).update({
+        formula: this.disciplina.formula
+      }).then(() => {
+
+      }).catch((erro) => {
+        console.log(erro);
+        loading.dismiss();
+        this.toastCtrl.create({
+          message: "Ocorreu um erro inesperado ao vincular a nota. :(",
+          duration: 3000
+        }).present();
+      });
+    }
   }
 
-  onSelectChangeDisc(select: any) {
-    this.carregarVariaveis();
+  onChangeDisciplina(disciplina: string) {
+    this.disciplinas.forEach((d) => {
+      if(d.id == disciplina) {
+        this.disciplina = d;
+      }
+    });
+  }
+
+  onChangeNota(variavel: string) {
+    this.disciplina.formula.variaveis.forEach((v) => {
+      if(v.nome == variavel) {
+        this.nota = v.valor;
+      }
+    });
+  }
+
+  onChangeValor(nota) {
+    let novoValor;
+
+    if(nota.value == "") {
+      novoValor = 0;
+    } else {
+      novoValor = nota.value;
+    }
+
+    this.disciplina.formula.variaveis.forEach((v) => {
+      if(v.nome == this.anotacao.variavel) {
+        v.valor = novoValor
+      }
+    });
+  }
+
+  onChangeStartTime(data) {
+    if(this.anotacao.diaTodo) {
+      this.dataMinB = moment(new Date(data.year, data.month, data.day))
+      .add(moment(new Date(data.year, data.month, data.day)).utcOffset(), 'm')
+      .toISOString();
+    } else {
+      this.dataMinB = moment(new Date(data.year, data.month, data.day, data.hour, data.minute))
+      .add(moment(new Date(data.year, data.month, data.day, data.hour, data.minute)).utcOffset(), 'm')
+      .toISOString();
+    }
+  }
+
+  onChangeEndTime(data) {
+    if(this.anotacao.diaTodo) {
+      this.dataMaxA = moment(new Date(data.year, data.month, data.day))
+      .add(moment(new Date(data.year, data.month, data.day)).utcOffset(), 'm')
+      .toISOString();
+    } else {
+      this.dataMaxA = moment(new Date(data.year, data.month, data.day, data.hour, data.minute))
+      .add(moment(new Date(data.year, data.month, data.day, data.hour, data.minute)).utcOffset(), 'm')
+      .toISOString();
+    }
+  }
+
+  onChangeDiaTodo(select) {
+    if(select.checked == true) {
+      this.tipoData = "DD/MM/YYYY";
+    } else {
+      this.tipoData = "DD/MM/YYYY HH:mm";
+    }
+
+    this.anotacao.startTime = this.anotacao.startTime;
+    this.anotacao.endTime = this.anotacao.endTime;
   }
 
   carregarVariaveis() {
+    /*
     if(this.tipo == "Avaliação" || this.tipo == "Trabalho" || this.tipo == "Lição de Casa") {
       let loading = this.loadingCtrl.create({
         content: "Carregando Notas..."
@@ -227,16 +311,15 @@ export class CadAnotacaoPage {
         loading.dismiss();
       });
     }
+    */
   }
 
-  onSelectChangeNota(select: any) {
-    this.formula.variaveis.forEach((v) => {
-      if(v.nome == select) {
-        console.log(v.valor);
-        this.variavel.valor = v.valor;
-        this.variavel.nome = v.nome;
-      }
-    });
+  voltar() {
+    if(this.navCtrl.canGoBack()) {
+      this.navCtrl.pop();
+    } else {
+      this.navCtrl.setRoot('HomePage');
+    }
   }
 
 }

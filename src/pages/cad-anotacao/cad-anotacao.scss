@@ -1,31 +1,27 @@
 page-cad-anotacao {
+  //fundo da tela
   ion-content {
     .scroll-content {
-      background-color: map-get($colors, backSec)
+      background-color: map-get($colors, backSec);
     }
   }
 
-  .item {
-    background-color: map-get($colors, backSec)
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
   }
 
-  .btn {
-    margin-top: 30px;
+  //ion-item secundário
+  .label-sec {
+    background-color: map-get($colors, backSec);
+    padding-top: 10px;
   }
 
-  ion-label {
-    padding-top: 15px;
-  }
-
-  .rowStyle {
+  //ion-item secundário
+  .item-sec {
     background-color: white;
-    padding-left: 15px;
     border-radius: 30px;
     margin-top: 10px;
   }
 
-  .item-label {
-    padding-left: 20px;
-    margin-top: 0px;
-  }
 }

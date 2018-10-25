@@ -4,7 +4,6 @@ import { IonicPage, NavController, NavParams, ViewController, AlertController } 
 import firebase from 'firebase';
 import * as math from 'mathjs';
 
-import { Formula } from '../../models/formula.model';
 import { Disciplina } from '../../models/disciplina.model';
 
 @IonicPage()

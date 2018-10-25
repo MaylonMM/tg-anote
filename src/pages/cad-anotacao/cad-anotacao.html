@@ -5,79 +5,83 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list style="width: 95%">
-    <ion-item>
-      <ion-label>Informações</ion-label>
-    </ion-item>
+  <ion-list>
+    <ion-item class="item-prim"><ion-label>Informações</ion-label></ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="clipboard" color="back"></ion-icon>
-      <ion-input type="text" placeholder="título da anotação" [(ngModel)]="titulo"></ion-input>
+      <ion-label stacked>Título da Anotação</ion-label>
+      <ion-input type="text" [(ngModel)]="anotacao.titulo"></ion-input>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="remove" color="back"></ion-icon>
-      <ion-select placeholder="tipo de anotação" [(ngModel)]="tipo" [selectOptions]="selectOptTipo" submitText="Ok" cancelText="Cancelar" >
+      <ion-label stacked>Tipo de Anotação</ion-label>
+      <ion-select [selectOptions]="selectOptTipo" [(ngModel)]="anotacao.tipo" cancelText="Cancelar" >
         <ion-option *ngFor="let tipo of tipos" value="{{ tipo }}" >{{ tipo }}</ion-option>
       </ion-select>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="book" color="back"></ion-icon>
-      <ion-select placeholder="disciplina vinculada" [(ngModel)]="disciplina" (ionChange)="onSelectChangeDisc($event)" [selectOptions]="selectOptDisciplina" submitText="Ok" cancelText="Cancelar" >
-        <ion-option *ngFor="let disciplina of disciplinas" value="{{ disciplina.id }}" >{{ disciplina.data().nome }}</ion-option>
+      <ion-label stacked>Disciplina Vinculada</ion-label>
+      <ion-select [selectOptions]="selectOptDisciplina" [(ngModel)]="anotacao.disciplina" (ionChange)="onChangeDisciplina($event)" cancelText="Cancelar" >
+        <ion-option *ngFor="let disciplina of disciplinas" value="{{ disciplina.id }}" >{{ disciplina.nome }}</ion-option>
       </ion-select>
     </ion-item>
 
-    <ion-item>
-      <ion-label>Data</ion-label>
-    </ion-item>
+    <ion-item class="label-sec"><ion-label>Sistema de Notas</ion-label></ion-item>
 
-    <ion-label class="item-label">Data e Hora Inicial</ion-label>
-    <ion-item class="rowStyle" no-lines>
-      <ion-icon item-start name="calendar" color="back"></ion-icon>
-      <ion-datetime displayFormat="DD/MM/YYYY HH:mm" placeholder="data e hora inicial" [(ngModel)]="startTime"></ion-datetime>
-    </ion-item>
-
-    <ion-label class="item-label">Data e Hora Final</ion-label>
-    <ion-item class="rowStyle" no-lines>
-      <ion-icon item-start name="calendar" color="back"></ion-icon>
-      <ion-datetime displayFormat="DD/MM/YYYY HH:mm" placeholder="data e hora inicial" [(ngModel)]="endTime"></ion-datetime>
-    </ion-item>
-
-    <ion-item class="rowStyle" no-lines>
-      <ion-icon item-start name="sunny" color="back"></ion-icon>
-      <ion-label class="item-label">Dia Todo?</ion-label>
-      <ion-toggle [(ngModel)]="diaTodo"></ion-toggle>
-    </ion-item>
-
-    <ion-item *ngIf="tipo == 'Avaliação' || tipo == 'Trabalho' || tipo == 'Lição de Casa'">
-      <ion-label>Sistema de Notas</ion-label>
-    </ion-item>
-
-    <ion-item class="rowStyle" no-lines *ngIf="tipo == 'Avaliação' || tipo == 'Trabalho' || tipo == 'Lição de Casa'">
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="ribbon" color="back"></ion-icon>
-      <ion-select placeholder="nota vinculada" [(ngModel)]="variavel.nome" (ionChange)="onSelectChangeNota($event)" [selectOptions]="selectOptNota" submitText="Ok" cancelText="Cancelar" >
-        <ion-option *ngFor="let variavel of formula.variaveis">{{ variavel.nome }}</ion-option>
+      <ion-label>Vincular Nota?</ion-label>
+      <ion-toggle [(ngModel)]="vincNota"></ion-toggle>
+    </ion-item>
+
+    <ion-item class="item-sec" no-lines *ngIf="vincNota">
+      <ion-icon item-start name="ribbon" color="back"></ion-icon>
+      <ion-label stacked>Nota</ion-label>
+      <ion-select [selectOptions]="selectOptNota" [(ngModel)]="anotacao.variavel" (ionChange)="onChangeNota($event)" cancelText="Cancelar">
+        <ion-option *ngFor="let variavel of disciplina.formula.variaveis">{{ variavel.nome }}</ion-option>
       </ion-select>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines *ngIf="tipo == 'Avaliação' || tipo == 'Trabalho' || tipo == 'Lição de Casa'">
+    <ion-item class="item-sec" no-lines *ngIf="vincNota">
       <ion-icon item-start name="trophy" color="back"></ion-icon>
-      <ion-input type="text" placeholder="valor da nota" [(ngModel)]="variavel.valor"></ion-input>
+      <ion-label stacked>Valor da Nota</ion-label>
+      <ion-input type="number" [(ngModel)]="nota" (ionChange)="onChangeValor($event)"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label>Informações Adicionais</ion-label>
+    <ion-item class="label-sec"><ion-label>Data</ion-label></ion-item>
+
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="calendar" color="back"></ion-icon>
+      <ion-label stacked>Data e Hora Inicial</ion-label>
+      <ion-datetime displayFormat="{{ tipoData }}" [(ngModel)]="anotacao.startTime" min="{{ dataMinA }}" max="{{ dataMaxA }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeStartTime($event)"></ion-datetime>
     </ion-item>
 
-    <ion-item class="rowStyle" no-lines>
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="calendar" color="back"></ion-icon>
+      <ion-label stacked>Data e Hora Final</ion-label>
+      <ion-datetime displayFormat="{{ tipoData }}" [(ngModel)]="anotacao.endTime" min="{{ dataMinB }}" max="{{ dataMaxB }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeEndTime($event)"></ion-datetime>
+    </ion-item>
+
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="sunny" color="back"></ion-icon>
+      <ion-label>Dia Todo?</ion-label>
+      <ion-toggle [(ngModel)]="anotacao.diaTodo" (ionChange)="onChangeDiaTodo($event)"></ion-toggle>
+    </ion-item>
+
+    <ion-item class="label-sec"><ion-label>Informações Adicionais</ion-label></ion-item>
+
+    <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="create" color="back"></ion-icon>
-      <ion-input type="text" placeholder="observações" [(ngModel)]="obs"></ion-input>
+      <ion-label stacked>Observações</ion-label>
+      <ion-textarea rows="10" [(ngModel)]="anotacao.obs"></ion-textarea>
     </ion-item>
-
-    <button ion-button *ngIf="!uid" block round color="laranja" class="btn" (click)="updatePage()">Atualizar</button>
-
-    <button ion-button block round color="back" class="btn" (click)="salvar()">Salvar</button>
   </ion-list>
+
+  <button ion-button block round color="back" (click)="salvar()">Salvar</button>
+  <button ion-button block outline round color="back" (click)="voltar()">Voltar</button>
+  <button ion-button *ngIf="uid == ''" block round color="laranja" (click)="updatePage()">Atualizar</button>
 </ion-content>
