@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController } from 'ionic-angular';
+
 import firebase from 'firebase';
 import moment from 'moment';
+
+import { Anotacao } from '../../models/anotacao.model';
+import { Disciplina } from '../../models/disciplina.model';
+import { Variavel } from '../../models/variavel.model';
 
 @IonicPage()
 @Component({
@@ -10,14 +15,11 @@ import moment from 'moment';
 })
 export class InfoAnotacaoPage {
 
-  anotacao: any = {};
-  disciplina: any = {
-    nome: "Nenhuma",
-    id: ""
-  };
-  diaTodo: string = "Não";
-  dataInicial: any = {};
-  dataFinal: any = {};
+  anotacao: Anotacao;
+  disciplina: Disciplina;
+  variavel: Variavel;
+  startTime: string;
+  endTime: string;
 
   constructor(
     public navCtrl: NavController,
@@ -27,51 +29,78 @@ export class InfoAnotacaoPage {
     private alertCtrl: AlertController
   ) {
     moment.locale('pt-BR');
-    this.anotacao = this.navParams.get("data");
+    this.anotacao = new Anotacao;
+    this.disciplina = new Disciplina;
+    this.variavel = new Variavel;
+    this.startTime = "Carregando...";
+    this.endTime = "Carregando...";
+  }
 
-    if(this.anotacao == undefined) {
-      this.navCtrl.setRoot('DisciplinasPage');
-    } else {
-      this.updatePage();
-    }
+  ionViewDidEnter() {
+    this.updatePage();
   }
 
   updatePage() {
-    let loading = this.loadingCtrl.create({
-      content: "Carregando Informações..."
-    });
-    loading.present();
+    let dadosAnotacao = this.navParams.get("anotacao");
 
-    if(this.anotacao.data().disciplina != "") {
-      firebase.firestore().collection("disciplinas").doc(this.anotacao.data().disciplina).get()
-      .then((doc) => {
-        console.log("Disciplina encontrada");
-        this.disciplina = {
-          nome: doc.data().nome,
-          id: doc.id
-        };
-        loading.dismiss();
-      }).catch((erro) => {
-        console.log("Erro ao encontrar a disciplina");
-        console.log(erro);
-        loading.dismiss();
+    if(dadosAnotacao != undefined) {
+      this.anotacao = dadosAnotacao;
+
+      let loading = this.loadingCtrl.create({
+        content: "Carregando Informações..."
       });
-    } else {
-      loading.dismiss();
-    }
+      loading.present();
 
-    if(this.anotacao.data().diaTodo) {
-      this.diaTodo = "Sim";
-    }
+      if(this.anotacao.disciplina != "") {
+        firebase.firestore().collection("disciplinas").doc(this.anotacao.disciplina).get()
+        .then((disciplina) => {
+          this.disciplina = {
+            nome: disciplina.data().nome,
+            sigla: disciplina.data().sigla,
+            periodo: disciplina.data().periodo,
+            notaMin: disciplina.data().notaMin,
+            notaMed: disciplina.data().notaMed,
+            notaMax: disciplina.data().notaMax,
+            formula: disciplina.data().formula,
+            user: disciplina.data().user,
+            id: disciplina.id
+          };
 
-    this.dataInicial = moment(new Date(this.anotacao.data().startTime)).add(moment(new Date(this.anotacao.data().startTime)).utcOffset() * -1, 'm').format("L LT");
-    this.dataFinal = moment(new Date(this.anotacao.data().endTime)).add(moment(new Date(this.anotacao.data().endTime)).utcOffset() * -1, 'm').format("L LT");
+          if(this.anotacao.variavel != '') {
+            this.disciplina.formula.variaveis.forEach((v) => {
+              if(v.nome == this.anotacao.variavel) {
+                this.variavel.nome = v.nome;
+                this.variavel.valor = v.valor;
+              }
+            });
+          }
+          loading.dismiss();
+        }).catch((erro) => {
+          console.log(erro);
+          loading.dismiss();
+          this.toastCtrl.create({
+            message: "Ocorreu um erro inesperado. :(",
+            duration: 3000
+          }).present();
+        });
+      } else {
+        loading.dismiss();
+      }
+
+      if(this.anotacao.diaTodo) {
+        this.startTime = moment(new Date(this.anotacao.startTime)).add(moment(new Date(this.anotacao.startTime)).utcOffset() * -1, 'm').format("L");
+        this.endTime = moment(new Date(this.anotacao.endTime)).add(moment(new Date(this.anotacao.endTime)).utcOffset() * -1, 'm').format("L");
+      } else {
+        this.startTime = moment(new Date(this.anotacao.startTime)).add(moment(new Date(this.anotacao.startTime)).utcOffset() * -1, 'm').format("L LT");
+        this.endTime = moment(new Date(this.anotacao.endTime)).add(moment(new Date(this.anotacao.endTime)).utcOffset() * -1, 'm').format("L LT");
+      }
+    }
   }
 
   alterar() {
     this.navCtrl.push('CadAnotacaoPage', {
       anotacao: this.anotacao,
-      disciplina: this.disciplina.id
+      disciplina: this.disciplina,
     });
   }
 
@@ -106,4 +135,11 @@ export class InfoAnotacaoPage {
     }).present();
   }
 
+  voltar() {
+    if(this.navCtrl.canGoBack()) {
+      this.navCtrl.pop();
+    } else {
+      this.navCtrl.setRoot('HomePage');
+    }
+  }
 }

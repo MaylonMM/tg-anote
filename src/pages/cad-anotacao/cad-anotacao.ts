@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ToastController, ActionSheetController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import firebase from 'firebase';
@@ -32,6 +32,7 @@ export class CadAnotacaoPage {
   dataMinB: string;
   dataMaxB: string;
   tipoData: string;
+  imgMudou: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -39,7 +40,8 @@ export class CadAnotacaoPage {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     public actionSheetCtrl: ActionSheetController,
-    private camera: Camera
+    private camera: Camera,
+    private alertCtrl: AlertController
   ) {
     this.uid = "";
     this.anotacao = new Anotacao;
@@ -59,6 +61,7 @@ export class CadAnotacaoPage {
     this.dataMinB = moment(new Date(this.anotacao.startTime)).toISOString();
     this.dataMaxB = moment().add(20, 'y').toISOString();
     this.tipoData = "DD/MM/YYYY HH:mm"
+    this.imgMudou = false;
   }
 
   ionViewDidEnter() {
@@ -109,22 +112,13 @@ export class CadAnotacaoPage {
       this.edit = true;
       this.anotacao = dadosAnotacao;
       this.disciplina = this.navParams.get("disciplina");
-    }
-  }
+      this.onChangeDiaTodo();
 
-  carregar() {
-    /*
-    this.editando = true;
-    this.titulo = this.anotacao.data().titulo;
-    this.tipo = this.anotacao.data().tipo;
-    this.disciplina = this.navParams.get("disciplina");
-    this.startTime = this.anotacao.data().startTime;
-    this.endTime = this.anotacao.data().endTime;
-    this.diaTodo = this.anotacao.data().diaTodo;
-    this.obs = this.anotacao.data().obs;
-    this.variavel = this.anotacao.data().variavel;
-    this.carregarVariaveis();
-    */
+      if(this.anotacao.variavel != '') {
+        this.vincNota = true;
+        this.onChangeNota(this.anotacao.variavel);
+      }
+    }
   }
 
   salvar() {
@@ -201,7 +195,10 @@ export class CadAnotacaoPage {
       obs: this.anotacao.obs,
       disciplina: this.anotacao.disciplina,
       variavel: this.anotacao.variavel,
-    }).then(() => {
+    }).then(async () => {
+      if(this.anotacao.image != "" && this.imgMudou) {
+        await this.upload(this.anotacao.id);
+      }
       this.navCtrl.setRoot('AgendaPage');
       loading.dismiss();
       this.toastCtrl.create({
@@ -212,7 +209,7 @@ export class CadAnotacaoPage {
       console.log(erro);
       loading.dismiss();
       this.toastCtrl.create({
-        message: "Ocorreu um erro inesperado ao vincular a nota. :(",
+        message: "Ocorreu um erro inesperado. :(",
         duration: 3000
       }).present();
     });
@@ -247,6 +244,15 @@ export class CadAnotacaoPage {
         this.nota = v.valor;
       }
     });
+
+    //atualizar essa logica colocando uma nova variavel
+    //if(this.edit && variavel != this.anotacao.variavel) {
+      //this.alertCtrl.create({
+        //title: "Atenção! :o",
+        //message: "Você está alterando uma avaliação que já foi salva por outra, lembre-se de trocar (se for preciso) o valor da avaliação antiga antes de fazer essa alteração.",
+        //buttons: [ { text: "Entendi! :)" } ]
+      //}).present();
+    //}
   }
 
   onChangeValor(nota) {
@@ -289,8 +295,8 @@ export class CadAnotacaoPage {
     }
   }
 
-  onChangeDiaTodo(select) {
-    if(select.checked == true) {
+  onChangeDiaTodo() {
+    if(this.anotacao.diaTodo) {
       this.tipoData = "DD/MM/YYYY";
     } else {
       this.tipoData = "DD/MM/YYYY HH:mm";
@@ -341,6 +347,7 @@ export class CadAnotacaoPage {
     this.camera.getPicture(options)
     .then((base64Image) => {
       this.anotacao.image = "data:image/png;base64," + base64Image;
+      this.imgMudou = true;
     }).catch((erro) => {
       console.log(erro);
     });
@@ -360,6 +367,7 @@ export class CadAnotacaoPage {
     this.camera.getPicture(options)
     .then((base64Image) => {
       this.anotacao.image = "data:image/png;base64," + base64Image;
+      this.imgMudou = true;
     }).catch((erro) => {
       console.log(erro);
     });

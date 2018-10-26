@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
 import moment from 'moment';
+import { Anotacao } from '../../models/anotacao.model';
 
 @IonicPage()
 @Component({
@@ -14,7 +15,7 @@ export class AgendaPage {
   eventSource = [];
   viewTitle: string;
   selectedDay = new Date();
-  anotacoes: any[] = [];
+  anotacoes: Anotacao[];
 
   calendar = {
     mode: 'month',
@@ -26,7 +27,7 @@ export class AgendaPage {
     public navParams: NavParams,
     private loadingCtrl: LoadingController
   ) {
-
+    this.anotacoes = [];
   }
 
   ionViewDidEnter() {
@@ -49,9 +50,22 @@ export class AgendaPage {
       .then((data) => {
         console.log("Anotações encontradas... Listando-as...");
         console.log(data);
-        this.anotacoes = data.docs;
+        this.anotacoes = [];
         let events: any[] = [];
         data.docs.forEach((doc) => {
+          this.anotacoes.push({
+            titulo: doc.data().titulo,
+            tipo: doc.data().tipo,
+            diaTodo: doc.data().diaTodo,
+            disciplina: doc.data().disciplina,
+            endTime: doc.data().endTime,
+            id: doc.id,
+            image: doc.data().image,
+            obs: doc.data().obs,
+            startTime: doc.data().startTime,
+            user: doc.data().user,
+            variavel: doc.data().variavel
+          });
           events.push({
             title: doc.data().titulo,
             startTime: moment(new Date(doc.data().startTime)).add(moment(new Date(doc.data().startTime)).utcOffset() * -1, 'm').toDate(),
@@ -88,8 +102,7 @@ export class AgendaPage {
       if(doc.id == event.id) {
         console.log("Encontrou!");
         this.navCtrl.push('InfoAnotacaoPage', {
-          event: event,
-          data: doc
+          anotacao: doc
         });
       }
     });

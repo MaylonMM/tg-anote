@@ -1,88 +1,89 @@
 <ion-header>
   <ion-navbar color="back">
-    <ion-title>Informações</ion-title>
+    <ion-title>Informações da Anotação</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-card>
     <ion-card-header>
-        Informações
-      </ion-card-header>
+      <h2>{{ anotacao.titulo }}</h2>
+      <h3>{{ anotacao.tipo }}</h3>
+    </ion-card-header>
 
-      <ion-list>
-        <ion-item>
-          <p>Título</p>
-          <h2>{{ anotacao.data().titulo }}</h2>
-        </ion-item>
+    <ion-card-content>
+      <label *ngIf="anotacao.diaTodo == true">Data Inicial</label>
+      <label *ngIf="anotacao.diaTodo == false">Data e Hora Inicial</label>
+      <h2><ion-icon color="back" name="calendar"></ion-icon>{{ startTime }}</h2>
 
-        <ion-item>
-          <p>Tipo de Anotação</p>
-          <h2>{{ anotacao.data().tipo }}</h2>
-        </ion-item>
+      <br>
+      <label *ngIf="anotacao.diaTodo == true">Data Final</label>
+      <label *ngIf="anotacao.diaTodo == false">Data e Hora Final</label>
+      <h2><ion-icon color="back" name="calendar"></ion-icon>{{ endTime }}</h2>
 
-        <ion-item>
-          <p>Disciplina Vinculada</p>
-          <h2>{{ disciplina.nome }}</h2>
-        </ion-item>
-      </ion-list>
+      <br>
+      <label>Dia todo?</label>
+      <h2 *ngIf="anotacao.diaTodo == true"><ion-icon color="back" name="sunny"></ion-icon>Sim</h2>
+      <h2 *ngIf="anotacao.diaTodo == false"><ion-icon color="back" name="sunny"></ion-icon>Não</h2>
+
+      <br>
+      <label>Disciplina Vinculada</label>
+      <h2><ion-icon color="back" name="book"></ion-icon>{{ disciplina.nome }}</h2>
+    </ion-card-content>
   </ion-card>
 
-  <ion-card>
-      <ion-card-header>
-        Data
-      </ion-card-header>
-
-      <ion-list>
-        <ion-item>
-          <p>Data e Hora Inicial</p>
-          <h2>{{ dataInicial }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Data e Hora Final</p>
-          <h2>{{ dataFinal }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Dia Todo?</p>
-          <h2>{{ diaTodo }}</h2>
-        </ion-item>
-      </ion-list>
-    </ion-card>
-
-  <ion-card *ngIf="anotacao.data().tipo == 'Avaliação' || anotacao.data().tipo == 'Trabalho' || anotacao.data().tipo == 'Lição de Casa'">
+  <ion-card *ngIf="variavel.nome != ''">
     <ion-card-header>
-        Sistema de Notas
-      </ion-card-header>
+      <h2>Sistema de Notas</h2>
+    </ion-card-header>
 
-      <ion-list>
-        <ion-item>
-          <p>Avaliação</p>
-          <h2>{{ anotacao.data().variavel.nome }}</h2>
-        </ion-item>
-
-        <ion-item>
-          <p>Nota</p>
-          <h2>{{ anotacao.data().variavel.valor }}</h2>
-        </ion-item>
-      </ion-list>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <label>Avaliação</label>
+            <h2><ion-icon color="back" name="ribbon"></ion-icon>{{ variavel.nome }}</h2>
+          </ion-col>
+          <ion-col>
+            <label>Nota</label>
+            <h2><ion-icon color="back" name="trophy"></ion-icon>{{ variavel.valor }}</h2>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
   </ion-card>
 
   <ion-card>
     <ion-card-header>
-        Informações Adicionais
-      </ion-card-header>
+      <h2>Informações Adicionais</h2>
+    </ion-card-header>
 
-      <ion-list>
-        <ion-item>
-          <p>Observações</p>
-          <h2>{{ anotacao.data().obs }}</h2>
-        </ion-item>
-      </ion-list>
+    <ion-card-content>
+      <label>Observações</label>
+      <ion-item>
+        <ion-textarea rows="5" [(ngModel)]="anotacao.obs" readonly="true"></ion-textarea>
+      </ion-item>
+    </ion-card-content>
   </ion-card>
 
-  <button ion-button block round color="back" style="margin-top: 30px;" (click)="alterar()">Alterar</button>
+  <ion-card *ngIf="anotacao.image != ''">
+    <ion-card-header>
+      <h2>Imagem</h2>
+    </ion-card-header>
 
-  <button ion-button block round color="danger" style="margin-top: 10px;" (click)="deletar()">Deletar</button>
+    <ion-card-content>
+      <img [src]="anotacao.image">
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col><button ion-button block round color="danger" (click)="deletar()">Deletar</button></ion-col>
+      <ion-col><button ion-button block round color="back" (click)="alterar()">Alterar</button></ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col><button ion-button block outline round color="back" (click)="voltar()">Voltar</button></ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
