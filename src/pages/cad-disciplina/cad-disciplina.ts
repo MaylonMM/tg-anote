@@ -7,6 +7,7 @@ import { Disciplina } from '../../models/disciplina.model';
 import { Curso } from '../../models/curso.model';
 import { Periodo } from '../../models/periodo.model';
 import { SelectOpt } from '../../models/selectOpt.model';
+import { Professor } from '../../models/professor.model';
 
 @IonicPage()
 @Component({
@@ -20,8 +21,10 @@ export class CadDisciplinaPage {
   curso: Curso;
   cursos: Curso[];
   periodos: Periodo[];
+  professores: Professor[];
   selectOptCurso: SelectOpt;
   selectOptPeriodo: SelectOpt;
+  selectOptProfessor: SelectOpt;
   edit: boolean;
 
   constructor(
@@ -36,8 +39,10 @@ export class CadDisciplinaPage {
     this.curso = new Curso;
     this.cursos = [];
     this.periodos = [];
+    this.professores = [];
     this.selectOptCurso = { title: "Cursos", subTitle: "Selecione um curso" };
     this.selectOptPeriodo = { title: "Sem Períodos", subTitle: "Selecione um curso para listar seus períodos" };
+    this.selectOptProfessor = { title: "Professores(as)", subTitle: "Selecione o(a) professor(a) dessa disciplina" };
     this.edit = false;
   }
 
@@ -52,7 +57,7 @@ export class CadDisciplinaPage {
     if(user != null) {
       this.uid = user.uid;
       let loading = this.loadingCtrl.create({
-        content: "Carregando Cursos..."
+        content: "Carregando..."
       });
       loading.present();
 
@@ -72,7 +77,30 @@ export class CadDisciplinaPage {
             id: curso.id
           });
         });
+
+        firebase.firestore().collection("professores")
+        .where("user", "==", this.uid)
+        .orderBy("nome", "asc").get()
+        .then((data) => {
+          this.professores = [];
+          data.docs.forEach((professor) => {
+          this.professores.push({
+            nome: professor.data().nome,
+            telefone: professor.data().telefone,
+            email: professor.data().email,
+            user: professor.data().user,
+            id: professor.id
+          });
+        });
         loading.dismiss();
+        }).catch((erro) => {
+          console.log(erro);
+          loading.dismiss();
+          this.toastCtrl.create({
+            message: "Ocorreu um erro inesperado. :(",
+            duration: 3000
+          }).present();
+        });
       }).catch((erro) => {
         console.log(erro);
         loading.dismiss();
@@ -142,6 +170,7 @@ export class CadDisciplinaPage {
         notaMax: this.disciplina.notaMax,
         formula: this.disciplina.formula,
         periodo: this.disciplina.periodo,
+        professor: this.disciplina.professor,
         user: this.uid
       }).then(() => {
         this.navCtrl.setRoot('DisciplinasPage');
@@ -174,6 +203,7 @@ export class CadDisciplinaPage {
       notaMed: this.disciplina.notaMed,
       notaMax: this.disciplina.notaMax,
       formula: this.disciplina.formula,
+      professor: this.disciplina.professor,
       periodo: this.disciplina.periodo
     }).then(() => {
       this.navCtrl.setRoot('DisciplinasPage');
@@ -202,6 +232,19 @@ export class CadDisciplinaPage {
       }
     });
     pageAddFormula.present();
+  }
+
+  addProfessor() {
+    let pageAddProfessor = this.modalCtrl.create('CadProfessorPage', {
+      professores: this.professores
+    });
+    pageAddProfessor.onDidDismiss(data => {
+      if(data != undefined) {
+        this.professores = data.professores;
+        this.disciplina.professor = data.id;
+      }
+    });
+    pageAddProfessor.present();
   }
 
   voltar() {

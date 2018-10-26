@@ -1,0 +1,26 @@
+page-cad-professor {
+  //fundo da tela
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, backSec);
+    }
+  }
+
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
+  }
+
+  //ion-item secundário
+  .label-sec {
+    background-color: map-get($colors, backSec);
+    padding-top: 10px;
+  }
+
+  //ion-item secundário
+  .item-sec {
+    background-color: white;
+    border-radius: 30px;
+    margin-top: 10px;
+  }
+}

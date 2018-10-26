@@ -36,6 +36,15 @@
       <ion-input type="text" [(ngModel)]="disciplina.sigla"></ion-input>
     </ion-item>
 
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="person" color="back"></ion-icon>
+      <ion-label stacked>Professor(a)</ion-label>
+      <ion-select [selectOptions]="selectOptProfessor" [(ngModel)]="disciplina.professor" cancelText="Cancelar" >
+        <ion-option *ngFor="let professor of professores" value="{{ professor.id }}" >{{ professor.nome }}</ion-option>
+      </ion-select>
+      <button ion-button item-end round color="back" (click)="addProfessor()">Novo</button>
+    </ion-item>
+
     <ion-item class="label-sec"><ion-label>Sistema de Notas</ion-label></ion-item>
 
     <ion-item class="item-sec" no-lines>

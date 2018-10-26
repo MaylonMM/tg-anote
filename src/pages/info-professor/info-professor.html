@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar color="back">
+    <ion-title>Informações do(a) Professor(a)</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      <h2>{{ professor.nome }}</h2>
+    </ion-card-header>
+
+    <ion-card-content>
+      <label>Telefone</label>
+      <h2><ion-icon color="back" name="call"></ion-icon>{{ professor.telefone }}</h2>
+
+      <br>
+      <label>E-mail</label>
+      <h2><ion-icon color="back" name="mail"></ion-icon>{{ professor.email }}</h2>
+
+      <br>
+      <label>Disciplinas do(a) professor(a)</label>
+      <h2 *ngIf="disciplinasDoProf.length == 0">Sem disciplinas vinculadas</h2>
+      <h2 *ngFor="let disciplina of disciplinasDoProf"><ion-icon color="back" name="book"></ion-icon>{{ disciplina.nome }}</h2>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col><button ion-button block round color="danger" (click)="deletar()">Deletar</button></ion-col>
+      <ion-col><button ion-button block round color="back" (click)="alterar()">Alterar</button></ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col><button ion-button block outline round color="back" (click)="voltar()">Voltar</button></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

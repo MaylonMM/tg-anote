@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import { Disciplina } from '../../models/disciplina.model';
 import { Periodo } from '../../models/periodo.model';
 import { Curso } from '../../models/curso.model';
+import { Professor } from '../../models/professor.model';
 
 @IonicPage()
 @Component({
@@ -17,6 +18,7 @@ export class InfoDisciplinaPage {
   disciplina: Disciplina;
   periodo: Periodo;
   curso: Curso;
+  professor: Professor;
 
   constructor(
     public navCtrl: NavController,
@@ -28,6 +30,9 @@ export class InfoDisciplinaPage {
     this.disciplina = new Disciplina;
     this.periodo = new Periodo;
     this.curso = new Curso;
+    this.professor = new Professor;
+
+    this.professor.nome = "Sem professor"
   }
 
   ionViewDidEnter() {
@@ -66,7 +71,28 @@ export class InfoDisciplinaPage {
             user: curso.data().user,
             id: curso.id
           };
-          loading.dismiss();
+          if(this.disciplina.professor != "") {
+            firebase.firestore().collection("professores").doc(this.disciplina.professor).get()
+            .then((professor) => {
+              this.professor = {
+                nome: professor.data().nome,
+                telefone: professor.data().telefone,
+                email: professor.data().email,
+                user: professor.data().user,
+                id: professor.id
+              };
+              loading.dismiss();
+            }).catch((erro) => {
+              console.log(erro);
+              loading.dismiss();
+              this.toastCtrl.create({
+                message: "Ocorreu um erro inesperado. :(",
+                duration: 3000
+              }).present();
+            });
+          } else {
+            loading.dismiss();
+          }
         }).catch((erro) => {
           console.log(erro);
           loading.dismiss();
@@ -91,7 +117,6 @@ export class InfoDisciplinaPage {
       disciplina: this.disciplina,
       curso: this.curso
     });
-
   }
 
   deletar() {
@@ -130,7 +155,6 @@ export class InfoDisciplinaPage {
         }
       ]
     }).present();
-
   }
 
   voltar() {

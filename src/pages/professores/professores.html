@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="back">
+      <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+    <ion-title>Meus Professores</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card *ngIf="professores.length == 0">
+    <ion-card-header>
+      <ion-icon item-start name="filing"></ion-icon>
+      Sem Professores Cadastrados
+    </ion-card-header>
+    <ion-card-content>
+      <p>Você ainda não tem nenhum professor cadastrado. Clique no botão <ion-icon name="add-circle"></ion-icon> logo abaixo para cadastrar seu primeiro professor e ficar sempre mais informado! :)</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list *ngIf="professores.length != 0">
+    <ion-item class="item-prim"><ion-label>Professores</ion-label></ion-item>
+
+    <button ion-item no-lines class="item-sec" *ngFor="let professor of professores" (click)="goInfo(professor)">
+      <ion-icon item-start color="back" name="person"></ion-icon>
+      <h2>{{ professor.nome }}</h2>
+      <p>{{ professor.email }}</p>
+    </button>
+  </ion-list>
+
+  <ion-fab right bottom>
+    <button ion-fab color="laranja" (click)="goCadProfessor()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <button ion-button *ngIf="uid == ''" block round color="laranja" (click)="updatePage()">Atualizar</button>
+</ion-content>

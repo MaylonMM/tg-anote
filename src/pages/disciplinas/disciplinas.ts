@@ -34,10 +34,10 @@ export class DisciplinasPage {
 
     if(user != null) {
       this.uid = user.uid;
-      let loadind = this.loadingCtrl.create({
+      let loading = this.loadingCtrl.create({
         content: "Carregando Disciplinas..."
       });
-      loadind.present();
+      loading.present();
 
       firebase.firestore().collection("disciplinas")
       .where("user", "==", this.uid)
@@ -53,14 +53,15 @@ export class DisciplinasPage {
             notaMed: disciplina.data().notaMed,
             notaMax: disciplina.data().notaMax,
             formula: disciplina.data().formula,
+            professor: disciplina.data().professor,
             user: disciplina.data().user,
             id: disciplina.id
           });
         });
-        loadind.dismiss();
+        loading.dismiss();
       }).catch((erro) => {
         console.log(erro);
-        loadind.dismiss();
+        loading.dismiss();
         this.toastCtrl.create({
           message: "Ocorreu um erro inesperado. :(",
           duration: 3000

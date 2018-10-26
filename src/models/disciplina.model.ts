@@ -8,6 +8,7 @@ export class Disciplina {
   notaMed: number;
   notaMin: number;
   formula: Formula;
+  professor: string;
   user: string;
 
   id?: string;
