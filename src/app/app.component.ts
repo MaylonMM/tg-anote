@@ -31,7 +31,8 @@ export class MyApp {
       { title: 'Agenda', component: 'AgendaPage' },
       { title: 'Nota', component: 'CadNotaPage' },
       { title: 'Simulador', component: 'SimuladorPage' },
-      { title: 'Professores', component: 'ProfessoresPage' }
+      { title: 'Professores', component: 'ProfessoresPage' },
+      { title: 'Perfil', component: 'PerfilPage' }
     ];
 
     firebase.auth().onAuthStateChanged((user) => {

@@ -1,0 +1,44 @@
+page-perfil {
+  //fundo da tela
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, backSec);
+    }
+  }
+
+  //foto circular
+  .circle {
+    width: 60%;
+    border-radius: 100%;
+    margin: 25px auto 0 auto;
+  }
+
+  img {
+    border-radius: 20px;
+    width: auto;
+    margin: auto;
+    display: block;
+  }
+
+  .btn {
+    margin-top: 40px;
+  }
+
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
+  }
+
+  //ion-item secundário
+  .label-sec {
+    background-color: map-get($colors, backSec);
+    padding-top: 10px;
+  }
+
+  //ion-item secundário
+  .item-sec {
+    background-color: white;
+    border-radius: 30px;
+    margin-top: 10px;
+  }
+}

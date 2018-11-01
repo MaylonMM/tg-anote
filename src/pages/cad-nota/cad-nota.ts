@@ -65,6 +65,7 @@ export class CadNotaPage {
             notaMed: disciplina.data().notaMed,
             notaMin: disciplina.data().notaMin,
             formula: disciplina.data().formula,
+            professor: disciplina.data().professor,
             user: disciplina.data().user,
             id: disciplina.id
           });

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar color="back">
+      <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+    <ion-title>Perfil</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <img [src]="foto">
+  <h2 text-center>{{ user.displayName }}</h2>
+  <p text-center>{{ user.email }}</p>
+
+  <ion-list *ngIf="edit == true">
+    <ion-item class="item-prim"><ion-label>Informações</ion-label></ion-item>
+
+    <ion-item class="item-sec" no-lines>
+      <ion-icon item-start name="person" color="back"></ion-icon>
+      <ion-label stacked>Seu Nome</ion-label>
+      <ion-input type="text" [(ngModel)]="nome"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid>
+    <ion-row *ngIf="edit == false">
+      <ion-col>
+          <button ion-button block round class="btn" color="back" *ngIf="edit == false" (click)="editar()">Editar</button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="edit == true">
+      <ion-col>
+          <button ion-button block round color="back" *ngIf="edit == true" (click)="addFoto()">Mudar Foto</button>
+      </ion-col>
+      <ion-col>
+          <button ion-button block round color="back" *ngIf="edit == true" (click)="salvar()">Salvar</button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+          <button ion-button block outline round color="back" (click)="voltar()">Voltar</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

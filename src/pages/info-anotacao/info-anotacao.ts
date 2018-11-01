@@ -62,6 +62,7 @@ export class InfoAnotacaoPage {
             notaMed: disciplina.data().notaMed,
             notaMax: disciplina.data().notaMax,
             formula: disciplina.data().formula,
+            professor: disciplina.data().professor,
             user: disciplina.data().user,
             id: disciplina.id
           };

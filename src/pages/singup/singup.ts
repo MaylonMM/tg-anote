@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, AlertController, ToastController } from 'ionic-angular';
+
 import firebase from 'firebase';
 
 @IonicPage()
