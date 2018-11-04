@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ToastController, ActionSheetController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import firebase from 'firebase';
@@ -38,8 +38,7 @@ export class CadAnotacaoPage {
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     public actionSheetCtrl: ActionSheetController,
-    private camera: Camera,
-    private alertCtrl: AlertController
+    private camera: Camera
   ) {
     this.uid = "";
     this.anotacao = new Anotacao;
@@ -139,6 +138,7 @@ export class CadAnotacaoPage {
         obs: this.anotacao.obs,
         disciplina: this.anotacao.disciplina,
         variavel: this.anotacao.variavel,
+        image: this.anotacao.image,
         user: this.uid
       }).then(async (doc) => {
         if(this.anotacao.image != "") {

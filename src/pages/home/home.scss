@@ -1,15 +1,74 @@
 page-home {
+  //fundo da tela
   ion-content {
     .scroll-content {
-      background-color: map-get($colors, backPrim)
+      background-color: map-get($colors, backSec);
     }
   }
 
-  .item {
-    background-color: map-get($colors, backPrim)
+  //ion-item primário
+  .item-prim {
+    background-color: map-get($colors, backSec);
   }
 
-  h1 {
-    font-size: 1em;
+  //card da apresentação da semana
+  .semanal {
+    ion-card-title {
+      background-color: map-get($colors, back);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+
+      h2 {
+        color: #FFFFFF;
+        font-size: 20px;
+        margin-left: 30px;
+        padding-top: 2px;
+      }
+    }
   }
+
+  //card da apresentação da próxima avaliação
+  .avaliacao {
+    ion-card-title {
+      background-color: map-get($colors, danger);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+
+      h2 {
+        color: #FFFFFF;
+        font-size: 16px;
+        margin-left: 30px;
+        padding-top: 2px;
+      }
+    }
+  }
+
+  //card da apresentação do próximo trabalho
+  .trabalho {
+    ion-card-title {
+      background-color: map-get($colors, laranja);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+
+      h2 {
+        color: #FFFFFF;
+        font-size: 16px;
+        margin-left: 30px;
+        padding-top: 2px;
+      }
+    }
+  }
+
+  //card da apresentação da próxima lição de casa
+  .licao {
+    ion-card-title {
+      background-color: map-get($colors, secondary);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+
+      h2 {
+        color: #FFFFFF;
+        font-size: 16px;
+        margin-left: 30px;
+        padding-top: 2px;
+      }
+    }
+  }
+
 }

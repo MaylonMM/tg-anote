@@ -1,25 +1,92 @@
 <ion-header>
   <ion-navbar color="back">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
     <ion-title>Início</ion-title>
-
-    <ion-buttons end>
-      <button ion-button icon-only clear (click)="logout()">
-        <ion-icon name="log-out"></ion-icon>
-      </button>
+    <ion-buttons end><button ion-button icon-only clear (click)="logout()"><ion-icon name="log-out"></ion-icon></button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-item text-center no-lines *ngIf="userName">
-    <h1>Olá, {{ userName }}!</h1>
-  </ion-item>
+  <button ion-button *ngIf="user == undefined" block round color="laranja" (click)="updatePage()">Atualizar</button>
 
-  <ion-item text-center no-lines>
-    <h1>Feed do aplicativo aqui!</h1>
-  </ion-item>
+  <ion-card class="semanal">
+    <ion-card-title *ngIf="user != undefined">
+      <h2>{{ msgApresentacao }}, {{ user.displayName }}!</h2>
+    </ion-card-title>
+    <ion-card-content>
+      <ion-list>
+        <ion-item no-lines text-wrap *ngIf="anotacoes.length == 0">
+          <h2>Opa! Pode ficar de boa! <ion-icon name="glasses"></ion-icon></h2>
+          <br><label>Você não tem nenhuma anotação ou atividade marcada para os próximos 7 dias, hora de relaxar.</label>
+        </ion-item>
+
+        <ion-item no-lines text-wrap *ngIf="anotacoes.length == 1">
+          <h2>Por enquanto está tudo tranquilo! <ion-icon name="glasses"></ion-icon></h2>
+          <br><label>Você tem 1 anotação ou atividade marcada para os próximos 7 dias, cuidado para não esquecer!</label>
+        </ion-item>
+
+        <ion-item no-lines text-wrap *ngIf="anotacoes.length > 1">
+          <label>Hora de se organizar! <ion-icon name="clipboard"></ion-icon></label>
+          <br><label>Você tem {{ anotacoes.length }} anotações ou atividades marcadas para os próximos 7 dias, entre na sua agenda para descobrir quais são e se organizar melhor.</label>
+        </ion-item>
+      </ion-list>
+
+      <button ion-button icon-start block round color="back" (click)="goAgenda()"><ion-icon name="calendar"></ion-icon>Ver a minha agenda</button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="avaliacao">
+    <ion-card-title><h2>Próxima avaliação</h2></ion-card-title>
+    <ion-card-content>
+      <ion-list>
+        <button ion-item no-lines *ngIf="avaliacao.titulo != ''" (click)="goAnotacao(avaliacao)">
+          <h2>{{ avaliacao.titulo }}</h2>
+          <p>Quando?</p>
+          <label>{{ startTimeAvaliacao }}</label>
+        </button>
+
+        <ion-item no-lines text-wrap *ngIf="avaliacao.titulo == ''">
+          <h2>Tudo tranquilo! <ion-icon name="glasses"></ion-icon></h2>
+          <label>Você não tem uma próxima avaliação.</label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="trabalho">
+    <ion-card-title><h2>Próximo trabalho</h2></ion-card-title>
+    <ion-card-content>
+      <ion-list>
+        <button ion-item no-lines *ngIf="trabalho.titulo != ''" (click)="goAnotacao(trabalho)">
+          <h2>{{ trabalho.titulo }}</h2>
+          <p>Quando?</p>
+          <label>{{ startTimeTrabalho }}</label>
+        </button>
+
+        <ion-item no-lines text-wrap *ngIf="trabalho.titulo == ''">
+          <h2>Tudo tranquilo! <ion-icon name="glasses"></ion-icon></h2>
+          <label>Você não tem um próximo trabalho.</label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="licao">
+    <ion-card-title><h2>Próxima liçao de casa</h2></ion-card-title>
+    <ion-card-content>
+      <ion-list>
+        <button ion-item no-lines *ngIf="licao.titulo != ''" (click)="goAnotacao(licao)">
+          <h2>{{ licao.titulo }}</h2>
+          <p>Quando?</p>
+          <label>{{ startTimeLicao }}</label>
+        </button>
+
+        <ion-item no-lines text-wrap *ngIf="licao.titulo == ''">
+          <h2>Tudo tranquilo! <ion-icon name="glasses"></ion-icon></h2>
+          <label>Você não tem uma próxima lição de casa.</label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
