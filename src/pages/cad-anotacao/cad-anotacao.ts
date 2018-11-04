@@ -27,10 +27,8 @@ export class CadAnotacaoPage {
   edit: boolean;
   vincNota: boolean;
   nota: number;
-  dataMinA: string;
-  dataMaxA: string;
-  dataMinB: string;
-  dataMaxB: string;
+  dataMin: string;
+  dataMax: string;
   tipoData: string;
   imgMudou: boolean;
 
@@ -56,10 +54,8 @@ export class CadAnotacaoPage {
     this.nota = 0;
     this.anotacao.startTime = moment(new Date()).add(moment(new Date()).utcOffset(), 'm').toISOString();
     this.anotacao.endTime = moment(new Date()).add(moment(new Date()).utcOffset() + 60, 'm').toISOString();
-    this.dataMinA = moment().add(-20, 'y').toISOString();
-    this.dataMaxA = moment(new Date(this.anotacao.endTime)).toISOString();
-    this.dataMinB = moment(new Date(this.anotacao.startTime)).toISOString();
-    this.dataMaxB = moment().add(20, 'y').toISOString();
+    this.dataMin = moment().add(-20, 'y').toISOString();
+    this.dataMax = moment().add(20, 'y').toISOString();
     this.tipoData = "DD/MM/YYYY HH:mm"
     this.imgMudou = false;
   }
@@ -273,26 +269,18 @@ export class CadAnotacaoPage {
   }
 
   onChangeStartTime(data) {
-    if(this.anotacao.diaTodo) {
-      this.dataMinB = moment(new Date(data.year, data.month, data.day))
-      .add(moment(new Date(data.year, data.month, data.day)).utcOffset(), 'm')
-      .toISOString();
-    } else {
-      this.dataMinB = moment(new Date(data.year, data.month, data.day, data.hour, data.minute))
-      .add(moment(new Date(data.year, data.month, data.day, data.hour, data.minute)).utcOffset(), 'm')
-      .toISOString();
+    console.log(moment(this.anotacao.startTime).diff(moment(this.anotacao.endTime)));
+    if(moment(this.anotacao.startTime).diff(moment(this.anotacao.endTime)) > 0) {
+      console.log("Entrou");
+      this.anotacao.endTime = this.anotacao.startTime;
     }
   }
 
   onChangeEndTime(data) {
-    if(this.anotacao.diaTodo) {
-      this.dataMaxA = moment(new Date(data.year, data.month, data.day))
-      .add(moment(new Date(data.year, data.month, data.day)).utcOffset(), 'm')
-      .toISOString();
-    } else {
-      this.dataMaxA = moment(new Date(data.year, data.month, data.day, data.hour, data.minute))
-      .add(moment(new Date(data.year, data.month, data.day, data.hour, data.minute)).utcOffset(), 'm')
-      .toISOString();
+    console.log(moment(this.anotacao.startTime).diff(moment(this.anotacao.endTime)));
+    if(moment(this.anotacao.startTime).diff(moment(this.anotacao.endTime)) > 0) {
+      console.log("Entrou");
+      this.anotacao.startTime = this.anotacao.endTime;
     }
   }
 
@@ -359,7 +347,7 @@ export class CadAnotacaoPage {
       quality: 100,
       sourceType: this.camera.PictureSourceType.CAMERA,
       destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
+      encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       correctOrientation: true,
       allowEdit: false
@@ -385,7 +373,7 @@ export class CadAnotacaoPage {
 
       uploadTask.on("state_changed", (taskSnapshot: any) => {
         console.log(taskSnapshot);
-        let porcentagem = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
+        let porcentagem = Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100);
         loading.setContent(porcentagem + "% Enviado...");
       }, (erro) => {
         console.log(erro);

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import firebase from 'firebase';
+
 import moment from 'moment';
+
 import { Anotacao } from '../../models/anotacao.model';
 
 @IonicPage()
@@ -17,9 +19,18 @@ export class AgendaPage {
   selectedDay = new Date();
   anotacoes: Anotacao[];
 
+  data = {
+    mes: moment(new Date()).locale("pt").format("MMMM"),
+    ano: moment(new Date()).locale("pt").format("YYYY"),
+    semana: moment(new Date()).locale("pt").format("W"),
+    tudo: moment(new Date()).locale("pt").format("LL")
+  };
+
   calendar = {
     mode: 'month',
-    currentDate: new Date()
+    currentDate: new Date(),
+    noEvent: "Nenhuma anotação neste dia",
+    diaTodo: "Dia Todo"
   };
 
   constructor(
@@ -28,6 +39,11 @@ export class AgendaPage {
     private loadingCtrl: LoadingController
   ) {
     this.anotacoes = [];
+  }
+
+  teste() {
+    console.log(this.calendar);
+    console.log(moment(this.calendar.currentDate).locale("pt").format("MMMM"));
   }
 
   ionViewDidEnter() {
@@ -110,6 +126,46 @@ export class AgendaPage {
 
   goCadAnotacao() {
     this.navCtrl.push('CadAnotacaoPage');
+  }
+
+  proximo() {
+    if(this.calendar.mode == "month") {
+      this.calendar.currentDate = moment(this.calendar.currentDate).add(1, "month").toDate();
+    } else if(this.calendar.mode == "week") {
+      this.calendar.currentDate = moment(this.calendar.currentDate).add(1, "week").toDate();
+    } else if(this.calendar.mode == "day") {
+      this.calendar.currentDate = moment(this.calendar.currentDate).add(1, "day").toDate();
+    }
+
+    this.data.mes = moment(this.calendar.currentDate).locale("pt").format("MMMM");
+    this.data.ano = moment(this.calendar.currentDate).locale("pt").format("YYYY");
+    this.data.semana = moment(this.calendar.currentDate).locale("pt").format("W");
+    this.data.tudo = moment(this.calendar.currentDate).locale("pt").format("LL");
+  }
+
+  anterior() {
+    if(this.calendar.mode == "month") {
+      this.calendar.currentDate = moment(this.calendar.currentDate).add(-1, "month").toDate();
+    } else if(this.calendar.mode == "week") {
+      this.calendar.currentDate = moment(this.calendar.currentDate).add(-1, "week").toDate();
+    } else if(this.calendar.mode == "day") {
+      this.calendar.currentDate = moment(this.calendar.currentDate).add(-1, "day").toDate();
+    }
+
+    this.data.mes = moment(this.calendar.currentDate).locale("pt").format("MMMM");
+    this.data.ano = moment(this.calendar.currentDate).locale("pt").format("YYYY");
+    this.data.semana = moment(this.calendar.currentDate).locale("pt").format("W");
+    this.data.tudo = moment(this.calendar.currentDate).locale("pt").format("LL");
+  }
+
+  mudar() {
+    if(this.calendar.mode == "month") {
+      this.calendar.mode = "week";
+    } else if(this.calendar.mode == "week") {
+      this.calendar.mode = "day";
+    } else if(this.calendar.mode == "day") {
+      this.calendar.mode = "month";
+    }
   }
 
 }

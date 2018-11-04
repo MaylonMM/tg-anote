@@ -57,13 +57,13 @@
     <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="calendar" color="back"></ion-icon>
       <ion-label stacked>Data e Hora Inicial</ion-label>
-      <ion-datetime displayFormat="{{ tipoData }}" [(ngModel)]="anotacao.startTime" min="{{ dataMinA }}" max="{{ dataMaxA }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeStartTime($event)"></ion-datetime>
+      <ion-datetime displayFormat="{{ tipoData }}" [(ngModel)]="anotacao.startTime" min="{{ dataMin }}" max="{{ dataMax }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeStartTime($event)"></ion-datetime>
     </ion-item>
 
     <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="calendar" color="back"></ion-icon>
       <ion-label stacked>Data e Hora Final</ion-label>
-      <ion-datetime displayFormat="{{ tipoData }}" [(ngModel)]="anotacao.endTime" min="{{ dataMinB }}" max="{{ dataMaxB }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeEndTime($event)"></ion-datetime>
+      <ion-datetime displayFormat="{{ tipoData }}" [(ngModel)]="anotacao.endTime" min="{{ dataMin }}" max="{{ dataMax }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeEndTime($event)"></ion-datetime>
     </ion-item>
 
     <ion-item class="item-sec" no-lines>

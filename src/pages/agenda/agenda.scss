@@ -1,28 +1,32 @@
 page-agenda {
+  //fundo da tela
   ion-content {
     .scroll-content {
-      background-color: map-get($colors, backPrim);
+      background-color: map-get($colors, backSec);
     }
   }
 
+  // lista de anotações, quando tiver
   .item {
-    background-color: map-get($colors, backPrim);
+    background-color: map-get($colors, backSec);
   }
 
-  .btn {
-    margin-top: 30px;
-  }
-
-  h4 {
-    text-align: center;
-    padding-top: 20px;
-  }
-
+  // botão suspenso
   ion-fab {
     padding: 20px;
   }
 
-  ion-fab-list {
-    padding: 20px;
+  //titulo no meio dos botões
+  .mes {
+    text-align: center;
+    padding-top: 10px;
   }
+
+  //linhas padrão
+  .linha {
+    background-color: white;
+    border-radius: 30px;
+    margin-top: 10px;
+  }
+
 }

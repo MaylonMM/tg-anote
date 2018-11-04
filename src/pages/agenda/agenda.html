@@ -1,22 +1,43 @@
 <ion-header>
   <ion-navbar color="back">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-
+    <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
     <ion-title>Minha Agenda</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <calendar [eventSource]="eventSource"
+  <ion-grid>
+    <ion-row class="linha">
+      <ion-col col-2><button ion-button icon-only clear (click)="anterior()"><ion-icon name="arrow-dropleft-circle"></ion-icon></button></ion-col>
+      <ion-col col-8 *ngIf="calendar.mode == 'month'"><h3 class="mes">{{ data.mes }} de {{ data.ano }}</h3></ion-col>
+      <ion-col col-8 *ngIf="calendar.mode == 'week'"><h3 class="mes">semana {{ data.semana }}</h3></ion-col>
+      <ion-col col-8 *ngIf="calendar.mode == 'day'"><h4 class="mes">{{ data.tudo }}</h4></ion-col>
+      <ion-col col-2><button ion-button icon-only clear (click)="proximo()"><ion-icon name="arrow-dropright-circle"></ion-icon></button></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list>
+    <ion-item class="linha" no-lines>
+      <ion-icon item-start name="swap" color="back"></ion-icon>
+      <ion-label *ngIf="calendar.mode == 'month'">Mês</ion-label>
+      <ion-label *ngIf="calendar.mode == 'week'">Semana</ion-label>
+      <ion-label *ngIf="calendar.mode == 'day'">Dia</ion-label>
+      <button ion-button item-end round color="back" (click)="mudar()">Mudar</button>
+    </ion-item>
+  </ion-list>
+
+  <br>
+
+  <calendar
+    [eventSource]="eventSource"
     [calendarMode]="calendar.mode"
     [currentDate]="calendar.currentDate"
+    [noEventsLabel]="calendar.noEvent"
+    [allDayLabel]="calendar.diaTodo"
     (onEventSelected)="onEventSelected($event)"
     (onTitleChanged)="onViewTitleChanged($event)"
     (onTimeSelected)="onTimeSelected($event)"
-    step="30"
-    class="calendar">
+    step="30">
   </calendar>
 
   <button ion-button *ngIf="!uid" block round color="laranja" class="btn" (click)="updatePage()">Atualizar</button>

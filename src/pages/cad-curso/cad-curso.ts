@@ -24,10 +24,8 @@ export class CadCursoPage {
   selectOptEscola: SelectOpt;
   selectOptTipo: SelectOpt;
   edit: boolean
-  dataMinA: string;
-  dataMaxA: string;
-  dataMinB: string;
-  dataMaxB: string;
+  dataMin: string;
+  dataMax: string;
 
   constructor(
     public navCtrl: NavController,
@@ -43,10 +41,8 @@ export class CadCursoPage {
     this.selectOptEscola = { title: "Escolas", subTitle: "Selecione uma escola" };
     this.selectOptTipo = { title: "Tipo de Período", subTitle: "Selecione o tipo/duração do período. Ex.: Semestral quando o período durar 6 meses" };
     this.edit = false;
-    this.dataMinA = moment().add(-100, 'y').year().toString();
-    this.dataMaxA = moment().add(100, 'y').year().toString();
-    this.dataMinB = this.dataMinA;
-    this.dataMaxB = this.dataMaxA;
+    this.dataMin = moment().add(-100, 'y').year().toString();
+    this.dataMax = moment().add(100, 'y').year().toString();
   }
 
   ionViewDidEnter() {
@@ -246,17 +242,17 @@ export class CadCursoPage {
   }
 
   onChangeStartTime(date) {
-    let data = date.year + "-" + date.month + "-" + date.day;
-    this.dataMinB = new Date(data).toISOString();
-    //depreciado
-    //this.dataMinB = moment(data).format("YYYY-MM-DD").toString();
+    if(moment(this.curso.dataInicio).diff(moment(this.curso.dataFinalizacao)) > 0) {
+      console.log("Entrou");
+      this.curso.dataFinalizacao = this.curso.dataInicio;
+    }
   }
 
   onChangeEndTime(date) {
-    let data = date.year + "-" + date.month + "-" + date.day;
-    this.dataMaxA = new Date(data).toISOString();
-    //depreciado
-    //this.dataMaxA = moment(data).format("YYYY-MM-DD").toString();
+    if(moment(this.curso.dataInicio).diff(moment(this.curso.dataFinalizacao)) > 0) {
+      console.log("Entrou");
+      this.curso.dataInicio = this.curso.dataFinalizacao;
+    }
   }
 
 }

@@ -169,7 +169,7 @@ export class PerfilPage {
 
       uploadTask.on("state_changed", (taskSnapshot: any) => {
         console.log(taskSnapshot);
-        let porcentagem = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
+        let porcentagem = Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100);
         loading.setContent(porcentagem + "% Enviado...");
       }, (erro) => {
         console.log(erro);

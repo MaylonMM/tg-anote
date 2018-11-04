@@ -31,13 +31,13 @@
     <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="calendar" color="back"></ion-icon>
       <ion-label stacked>Data de Início</ion-label>
-      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="curso.dataInicio" min="{{ dataMinA }}" max="{{ dataMaxA }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeStartTime($event)"></ion-datetime>
+      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="curso.dataInicio" min="{{ dataMin }}" max="{{ dataMax }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeStartTime($event)"></ion-datetime>
     </ion-item>
 
     <ion-item class="item-sec" no-lines>
       <ion-icon item-start name="calendar" color="back"></ion-icon>
       <ion-label stacked>Data/Previsão de Finalização</ion-label>
-      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="curso.dataFinalizacao" min="{{ dataMinB }}" max="{{ dataMaxB }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeEndTime($event)"></ion-datetime>
+      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="curso.dataFinalizacao" min="{{ dataMin }}" max="{{ dataMax }}" doneText="Ok" cancelText="Cancelar" (ionChange)="onChangeEndTime($event)"></ion-datetime>
     </ion-item>
 
     <ion-item class="label-sec"><ion-label>Períodos</ion-label></ion-item>
