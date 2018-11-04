@@ -1,14 +1,55 @@
 <ion-menu [content]="content">
   <ion-header>
-    <ion-toolbar color="backPrim">
+    <ion-toolbar color="titleMenu">
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
     <ion-list>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{ p.title }}
+      <button menuClose ion-item (click)="goFor('PerfilPage')">
+        <ion-avatar item-start><img [src]="usuario.foto"></ion-avatar>
+        Olá, {{ usuario.nome }}!
+      </button>
+
+      <button menuClose ion-item (click)="goFor('HomePage')">
+        <ion-icon item-start name="home"></ion-icon>
+        Início
+      </button>
+
+      <button menuClose ion-item (click)="goFor('AgendaPage')">
+        <ion-icon item-start name="calendar"></ion-icon>
+        Agenda
+      </button>
+
+      <button menuClose ion-item (click)="goFor('EscolasPage')">
+        <ion-icon item-start name="school"></ion-icon>
+        Escolas
+      </button>
+
+      <button menuClose ion-item (click)="goFor('CursosPage')">
+        <ion-icon item-start name="bookmarks"></ion-icon>
+        Cursos
+      </button>
+
+      <button menuClose ion-item (click)="goFor('DisciplinasPage')">
+        <ion-icon item-start name="book"></ion-icon>
+        Disciplinas
+      </button>
+
+      <button menuClose ion-item (click)="goFor('ProfessoresPage')">
+        <ion-icon item-start name="person"></ion-icon>
+        Professores
+      </button>
+
+      <button menuClose ion-item (click)="goFor('CadNotaPage')">
+        <ion-icon item-start name="ribbon"></ion-icon>
+        Notas
+      </button>
+
+      <button menuClose ion-item (click)="goFor('SimuladorPage')">
+        <ion-icon item-start name="calculator"></ion-icon>
+        Simulador de Notas
       </button>
     </ion-list>
   </ion-content>

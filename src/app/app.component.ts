@@ -14,6 +14,10 @@ export class MyApp {
   pages: Array<{title: string, component: string}>;
   userCred: any;
   autoLogin: boolean = true;
+  usuario: any = {
+    nome: "Carregando...",
+    foto: "../assets/imgs/person.png"
+  };
 
   constructor(
     public platform: Platform,
@@ -24,26 +28,22 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Inicio', component: 'HomePage' },
-      { title: 'Escolas', component: 'EscolasPage' },
-      { title: 'Cursos', component: 'CursosPage' },
-      { title: 'Disciplinas', component: 'DisciplinasPage' },
-      { title: 'Agenda', component: 'AgendaPage' },
-      { title: 'Nota', component: 'CadNotaPage' },
-      { title: 'Simulador', component: 'SimuladorPage' },
-      { title: 'Professores', component: 'ProfessoresPage' },
-      { title: 'Perfil', component: 'PerfilPage' }
+
     ];
 
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         console.log("Atualização feita na conta de: " + user.displayName);
 
-        if(this.nav.getActive().name == "LoginPage") {
-          this.autoLogin = true;
+        this.usuario.nome = user.displayName;
+
+        if(user.photoURL != undefined) {
+          this.usuario.foto = user.photoURL;
         }
 
-        else {
+        if(this.nav.getActive().name == "LoginPage") {
+          this.autoLogin = true;
+        } else {
           this.autoLogin = false;
         }
 
@@ -71,6 +71,10 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  goFor(page: string) {
+    this.nav.setRoot(page);
   }
 
 }
