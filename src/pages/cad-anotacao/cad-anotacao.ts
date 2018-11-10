@@ -324,10 +324,10 @@ export class CadAnotacaoPage {
 
   carregarGaleria() {
     let options: CameraOptions = {
-      quality: 100,
+      quality: 50,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
+      encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       correctOrientation: true,
       allowEdit: false
@@ -335,7 +335,7 @@ export class CadAnotacaoPage {
 
     this.camera.getPicture(options)
     .then((base64Image) => {
-      this.anotacao.image = "data:image/png;base64," + base64Image;
+      this.anotacao.image = "data:image/jpeg;base64," + base64Image;
       this.imgMudou = true;
     }).catch((erro) => {
       console.log(erro);
@@ -344,7 +344,7 @@ export class CadAnotacaoPage {
 
   carregarCamera() {
     let options: CameraOptions = {
-      quality: 100,
+      quality: 50,
       sourceType: this.camera.PictureSourceType.CAMERA,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
@@ -355,7 +355,7 @@ export class CadAnotacaoPage {
 
     this.camera.getPicture(options)
     .then((base64Image) => {
-      this.anotacao.image = "data:image/png;base64," + base64Image;
+      this.anotacao.image = "data:image/jpeg;base64," + base64Image;
       this.imgMudou = true;
     }).catch((erro) => {
       console.log(erro);

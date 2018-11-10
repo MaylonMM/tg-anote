@@ -21,6 +21,7 @@ export class Disciplina {
     this.notaMax = 10;
     this.notaMed = 5;
     this.formula = new Formula;
+    this.professor = "";
     this.user = "";
   }
 }

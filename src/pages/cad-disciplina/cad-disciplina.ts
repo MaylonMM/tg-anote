@@ -162,13 +162,15 @@ export class CadDisciplinaPage {
       });
       loading.present();
 
+      console.log(this.disciplina);
+
       firebase.firestore().collection("disciplinas").add({
         nome: this.disciplina.nome,
         sigla: this.disciplina.sigla,
         notaMin: this.disciplina.notaMin,
         notaMed: this.disciplina.notaMed,
         notaMax: this.disciplina.notaMax,
-        formula: this.disciplina.formula,
+        formula: Object.assign({}, this.disciplina.formula),
         periodo: this.disciplina.periodo,
         professor: this.disciplina.professor,
         user: this.uid
