@@ -53,7 +53,9 @@
     </ion-grid>
 
     <ion-item class="item-sec" no-lines>
-      <ion-icon item-start name="checkmark-circle-outline" color="back"></ion-icon>
+      <ion-icon item-start name="pulse" color="back" *ngIf="result == ''"></ion-icon>
+      <ion-icon item-start name="checkmark-circle" color="back" *ngIf="result == 'Aprovado!'"></ion-icon>
+      <ion-icon item-start name="close-circle" color="back" *ngIf="result == 'Reprovado...'"></ion-icon>
       <ion-label stacked>Resultado Final</ion-label>
       <ion-input type="text" [(ngModel)]="result" disabled="true"></ion-input>
     </ion-item>

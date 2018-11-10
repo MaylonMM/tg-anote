@@ -92,6 +92,7 @@ export class SimuladorPage {
 
   calcular() {
     const parser = math.parser();
+    let preNota = 0;
 
     this.disciplina.formula.variaveis.forEach((v) => {
       let inc = "";
@@ -104,8 +105,17 @@ export class SimuladorPage {
       parser.eval(inc);
     });
 
-    this.nota = parser.eval(this.disciplina.formula.expressao);
+    preNota = parser.eval(this.disciplina.formula.expressao);
 
+    if(preNota < this.disciplina.notaMin) {
+      this.nota = this.disciplina.notaMin;
+    } else if(preNota > this.disciplina.notaMax) {
+      this.nota = this.disciplina.notaMax;
+    } else {
+      this.nota = preNota;
+    }
+
+    console.log(this.nota, this.disciplina.notaMed);
     if(this.nota >= this.disciplina.notaMed) {
       this.result = "Aprovado!"
     } else {

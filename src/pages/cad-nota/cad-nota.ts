@@ -83,6 +83,7 @@ export class CadNotaPage {
 
   calcular() {
     const parser = math.parser();
+    let preNota = 0;
 
     this.disciplina.formula.variaveis.forEach((v) => {
       let inc = "";
@@ -95,7 +96,15 @@ export class CadNotaPage {
       parser.eval(inc);
     });
 
-    this.nota = parser.eval(this.disciplina.formula.expressao);
+    preNota = parser.eval(this.disciplina.formula.expressao);
+
+    if(preNota < this.disciplina.notaMin) {
+      this.nota = this.disciplina.notaMin;
+    } else if(preNota > this.disciplina.notaMax) {
+      this.nota = this.disciplina.notaMax;
+    } else {
+      this.nota = preNota;
+    }
   }
 
   onSelectDisciplina(select: any) {
