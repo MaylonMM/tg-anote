@@ -10,7 +10,7 @@ import firebase from 'firebase';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: string = 'LoginPage';
+  rootPage: string = 'LoadPage';
   pages: Array<{title: string, component: string}>;
   userCred: any;
   autoLogin: boolean = true;
@@ -27,34 +27,8 @@ export class MyApp {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
-    this.pages = [
-
-    ];
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
-        console.log("Atualização feita na conta de: " + user.displayName);
-
-        this.usuario.nome = user.displayName;
-
-        if(user.photoURL != undefined) {
-          this.usuario.foto = user.photoURL;
-        }
-
-        if(this.nav.getActive().name == "LoginPage") {
-          this.autoLogin = true;
-        } else {
-          this.autoLogin = false;
-        }
-
-        if(this.autoLogin) {
-          this.nav.setRoot('HomePage');
-          this.autoLogin = false;
-        }
-      } else {
-        console.log("Sem usuário logado no sistema");
-      }
-    });
+    this.pages = [];
+    this.loadUser();
   }
 
   initializeApp() {
@@ -75,6 +49,34 @@ export class MyApp {
 
   goFor(page: string) {
     this.nav.setRoot(page);
+  }
+
+  loadUser() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        console.log("Atualização feita na conta: " + user.displayName);
+        this.usuario.nome = user.displayName;
+        if(user.photoURL != undefined) {
+          this.usuario.foto = user.photoURL;
+        }
+
+        if(this.nav.getActive().name == "LoginPage") {
+          this.autoLogin = true;
+        } else if(this.nav.getActive().name == "LoadPage") {
+          this.autoLogin = true;
+        } else {
+          this.autoLogin = false;
+        }
+
+        if(this.autoLogin) {
+          this.nav.setRoot('HomePage');
+          this.autoLogin = false;
+        }
+      } else {
+        this.nav.setRoot('LoginPage');
+        this.autoLogin = false;
+      }
+    });
   }
 
 }

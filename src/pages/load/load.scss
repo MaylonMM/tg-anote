@@ -1,0 +1,27 @@
+page-load {
+  ion-content {
+    .scroll-content {
+      background-color: map-get($colors, back)
+    }
+  }
+
+  img {
+    width: 125px;
+    padding-top: 80px;
+    padding-block-end: 0px;
+  }
+
+  .item {
+    background-color: map-get($colors, back)
+  }
+
+  h1 {
+    color: white;
+    font-size: 1em;
+  }
+
+  h2 {
+    color: white;
+    padding-top: 50px;
+  }
+}
