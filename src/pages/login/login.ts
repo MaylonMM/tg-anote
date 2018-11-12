@@ -47,7 +47,7 @@ export class LoginPage {
         console.log(user);
 
         this.toastCtrl.create({
-          message: "Bem vindo, " + user.user.displayName + "!",
+          message: "Bem vindo, " + user.displayName + "!",
           duration: 3000
         }).present();
         // Direcionamento feito pelo observador em app.component.ts

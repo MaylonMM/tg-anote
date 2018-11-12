@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage, ToastController, LoadingController } from 'ionic-angular';
 
-import firebase from "firebase";
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 import moment from 'moment';
 
 import { Anotacao } from '../../models/anotacao.model';

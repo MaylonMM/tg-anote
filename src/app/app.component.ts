@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 @Component({
   templateUrl: 'app.html'
@@ -59,7 +60,9 @@ export class MyApp {
         if(user.photoURL != undefined) {
           this.usuario.foto = user.photoURL;
         }
+        this.nav.setRoot('HomePage');
 
+        /*
         if(this.nav.getActive().name == "LoginPage") {
           this.autoLogin = true;
         } else if(this.nav.getActive().name == "LoadPage") {
@@ -71,7 +74,8 @@ export class MyApp {
         if(this.autoLogin) {
           this.nav.setRoot('HomePage');
           this.autoLogin = false;
-        }
+        }*/
+
       } else {
         this.nav.setRoot('LoginPage');
         this.autoLogin = false;
