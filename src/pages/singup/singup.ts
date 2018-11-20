@@ -47,13 +47,12 @@ export class SingupPage {
       .then((data) => {
         console.log(data);
 
-        let newUser: firebase.User = data.user;
-        newUser.updateProfile({
+        data.updateProfile({
           displayName: this.nome,
           photoURL: ""
         })
         .then(() => {
-          console.log("Profile Updated")
+          console.log("Profile Updated");
 
           this.alertCtrl.create({
             title: "Conta criada",

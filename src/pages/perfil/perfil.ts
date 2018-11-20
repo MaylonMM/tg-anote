@@ -46,6 +46,7 @@ export class PerfilPage {
     }
 
     this.nome = this.user.displayName;
+    console.log(this.user);
   }
 
   salvar() {
